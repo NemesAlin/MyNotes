@@ -1,0 +1,25 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.alinnemes.mynotes.EditActivity">
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:title="@string/action_settings"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_photo"
+        android:title="Take a photo"
+        android:icon="@drawable/camera_icon"
+        app:showAsAction="ifRoom"
+        />
+    <item
+        android:id="@+id/action_gallery"
+        android:title="gallery_photo"
+        android:icon="@drawable/gallery_icon"
+        app:showAsAction="ifRoom"
+        />
+
+
+</menu>

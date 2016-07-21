@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="true">My Notes</string>
+    <string name="add_note" translatable="true">Add Note</string>
+    <string name="action_settings" translatable="true">Settings</string>
+
+
+    <!--Fragments titles-->
+    <string name="title_view_fragment" translatable="true">View Note</string>
+    <string name="title_add_fragment" translatable="true">Add Note</string>
+    <string name="title_edit_fragment" translatable="true">Edit Note</string>
+
+    <string name="body_description" translatable="true">Body Description!</string>
+    <string name="note_title" translatable="true">Note Title</string>
+
+    <!--Long press Menu-->
+    <string name="delete_menu" translatable="true">Delete</string>
+    <string name="edit_menu" translatable="true">Edit</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="note_subject" translatable="true">Note Subject</string>
+    <string name="note_body" translatable="true">Note body</string>
+
+
+    <string name="new_note_body" translatable="true">New Note Body</string>
+
+    <!--Buttons titles-->
+    <string name="edit_note" translatable="true">Edit Note</string>
+    <string name="save_note" translatable="true">Save Note</string>
+    <string name="discard_note" translatable="true">Discard Note</string>
+    <string name="delete_note" translatable="true">Delete Note</string>
+</resources>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="true">Mon Remarque</string>
+    <string name="add_note" translatable="true">Ajouter Note</string>
+    <string name="action_settings" translatable="true">Paramètres</string>
+
+
+    <!--Fragments titles-->
+    <string name="title_view_fragment" translatable="true">Vue Remarque</string>
+    <string name="title_add_fragment" translatable="true">Ajouter Remarque</string>
+    <string name="title_edit_fragment" translatable="true">Éditer Remarque</string>
+
+    <string name="body_description" translatable="true">Corps Description!</string>
+    <string name="note_title" translatable="true">Remarque Titre</string>
+
+    <!--Long press Menu-->
+    <string name="delete_menu" translatable="true">Effacer</string>
+    <string name="edit_menu" translatable="true">Éditer</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="note_subject" translatable="true">Remarque Assujettir</string>
+    <string name="note_body" translatable="true">Remarque corps</string>
+
+
+    <string name="new_note_body" translatable="true">Nouveau Remarque corps</string>
+
+    <!--Buttons titles-->
+    <string name="edit_note" translatable="true">Éditer Remarque</string>
+    <string name="save_note" translatable="true">Enregistrer Remarque</string>
+    <string name="discard_note" translatable="true">Jeter Remarque</string>
+    <string name="delete_note" translatable="true">Effacer Remarque</string>
+</resources>
