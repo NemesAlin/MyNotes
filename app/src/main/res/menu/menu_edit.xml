@@ -20,6 +20,12 @@
         android:icon="@drawable/gallery_icon"
         app:showAsAction="ifRoom"
         />
+    <item
+        android:id= "@+id/action_record"
+        android:title = "Audio Record"
+        app:showAsAction = "ifRoom">
+    </item>
+
 
 
 </menu>
