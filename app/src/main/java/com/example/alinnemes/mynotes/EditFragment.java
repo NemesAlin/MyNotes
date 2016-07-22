@@ -159,10 +159,6 @@ public class EditFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_record:
-                Intent intent = new Intent(getActivity(), AudioRecorder.class);
-                startActivity(intent);
-                return true;
             case R.id.action_photo:
                 dispatchTakePictureIntent();
                 return true;

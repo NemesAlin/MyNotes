@@ -85,8 +85,8 @@ public class ViewFragment extends Fragment {
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MyNotesDBAdapter myNotesDBAdapter = new MyNotesDBAdapter(getActivity().getBaseContext());
                 ///Try something here!!! if don;t work, delete!!!!:)
+                MyNotesDBAdapter myNotesDBAdapter = new MyNotesDBAdapter(getActivity().getBaseContext());
                 myNotesDBAdapter.open();
                 Note note = myNotesDBAdapter.getNote(noteSubject.getText().toString(), noteBody.getText().toString());
                 myNotesDBAdapter.close();
