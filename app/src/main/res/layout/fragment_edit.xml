@@ -91,5 +91,15 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/messageScrollView"/>
+
+        <MediaController
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/mediaController"
+            android:layout_below="@+id/imageView"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
     </RelativeLayout>
 </ScrollView>

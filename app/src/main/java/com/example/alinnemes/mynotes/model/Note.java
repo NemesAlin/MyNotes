@@ -9,12 +9,14 @@ public class Note {
     private String subject;
     private String body;
     private String photoPath;
+    private String audioPath;
 
-    public Note(int id, String subject, String body, String photoPath) {
+    public Note(int id, String subject, String body, String photoPath, String audioPath) {
         this.id = id;
         this.subject = subject;
         this.body = body;
         this.photoPath = photoPath;
+        this.audioPath = audioPath;
     }
 
     @Override
@@ -25,6 +27,14 @@ public class Note {
                 ", body='" + body + '\'' +
                 ", photoPath='" + photoPath + '\'' +
                 '}';
+    }
+
+    public String getAudioPath() {
+        return audioPath;
+    }
+
+    public void setAudioPath(String audioPath) {
+        this.audioPath = audioPath;
     }
 
     public String getPhotoPath() {

@@ -28,13 +28,25 @@ import com.example.alinnemes.mynotes.model.Note;
  */
 public class ViewFragment extends Fragment {
 
-    AlertDialog deleteConfirmDialogObject;
-    TextView noteSubject;
-    TextView noteBody;
-    String noteSubjectSTR;
-    String noteBodySTR;
-    ImageView mImageView;
-    public String picturePath;
+    private AlertDialog deleteConfirmDialogObject;
+    //textViews
+    private TextView noteSubject;
+    private TextView noteBody;
+    private TextView notifAudioRecordTV;
+    //imageViews
+    private ImageView mImageView;
+    //buttons
+    private Button deleteButton;
+    private Button editButton;
+    private Button playStopAudioRecordBTN;
+    //strings
+    private String picturePath;
+    private String audioPath;
+    private String noteSubjectSTR;
+    private String noteBodySTR;
+
+    boolean mStartPlaying = true;
+    AudioRecorder audioRecorder = new AudioRecorder();
 
     public ViewFragment() {
         setHasOptionsMenu(true);
@@ -60,17 +72,22 @@ public class ViewFragment extends Fragment {
 
         noteSubject = (TextView) view.findViewById(R.id.viewNoteSubject);
         noteBody = (TextView) view.findViewById(R.id.viewNoteBody);
+        notifAudioRecordTV = (TextView) view.findViewById(R.id.audioRecordText);
+        notifAudioRecordTV.setVisibility(View.GONE);
         mImageView = (ImageView) view.findViewById(R.id.imageView_ViewFrag);
 
-        Button deleteButton = (Button) view.findViewById(R.id.deleteNote);
-        Button editButton = (Button) view.findViewById(R.id.editNote);
+        deleteButton = (Button) view.findViewById(R.id.deleteNote);
+        editButton = (Button) view.findViewById(R.id.editNote);
+        playStopAudioRecordBTN = (Button) view.findViewById(R.id.playStopAudioBTN);
+        playStopAudioRecordBTN.setVisibility(View.GONE);
 
         Intent intent = getActivity().getIntent();
 
 //        if(savedInstanceState!=null)
         noteSubject.setText(intent.getExtras().getString(MainActivity.NOTE_SUBJECT_EXTRA));
         noteBody.setText(intent.getExtras().getString(MainActivity.NOTE_BODY_EXTRA));
-        picturePath = intent.getExtras().getString(MainActivity.NOTE_PATH_EXTRA);
+        picturePath = intent.getExtras().getString(MainActivity.NOTE_PHOTOPATH_EXTRA);
+        audioPath = intent.getExtras().getString(MainActivity.NOTE_AUDIOPATH_EXTRA);
         if (picturePath != null) {
             try {
                 loadBitmap(picturePath, mImageView);
@@ -78,6 +95,23 @@ public class ViewFragment extends Fragment {
                 Toast.makeText(getActivity(), "The photo has been deleted from the phone's memory or cannot find!", Toast.LENGTH_SHORT).show();
                 picturePath = null;
             }
+        }
+        if (audioPath != null) {
+            notifAudioRecordTV.setVisibility(View.VISIBLE);
+            playStopAudioRecordBTN.setVisibility(View.VISIBLE);
+
+            playStopAudioRecordBTN.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    audioRecorder.onPlay(mStartPlaying,audioPath);
+                    if (mStartPlaying) {
+                        playStopAudioRecordBTN.setText("Stop playing");
+                    } else {
+                        playStopAudioRecordBTN.setText("Start playing");
+                    }
+                    mStartPlaying = !mStartPlaying;
+                }
+            });
         }
 
         buildDeleteConfirmDialog();
@@ -94,7 +128,8 @@ public class ViewFragment extends Fragment {
                 intent.putExtra(MainActivity.NOTE_ID_EXTRA, note.getId());
                 intent.putExtra(MainActivity.NOTE_SUBJECT_EXTRA, note.getSubject());
                 intent.putExtra(MainActivity.NOTE_BODY_EXTRA, note.getBody());
-                intent.putExtra(MainActivity.NOTE_PATH_EXTRA, note.getPhotoPath());
+                intent.putExtra(MainActivity.NOTE_PHOTOPATH_EXTRA, note.getPhotoPath());
+                intent.putExtra(MainActivity.NOTE_AUDIOPATH_EXTRA, note.getAudioPath());
                 intent.putExtra(MainActivity.NOTE_FRAGMENT_TO_LOAD, MainActivity.FragmentToLaunch.EDIT);
                 startActivity(intent);
             }

@@ -67,7 +67,7 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_below="@+id/imageView_ViewFrag"
+            android:layout_below="@+id/playStopAudioBTN"
             android:backgroundTint="@color/colorPrimary"
             android:text="@string/edit_note"
             android:textColor="#ffffff" />
@@ -83,7 +83,7 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="false"
             android:layout_alignWithParentIfMissing="false"
-            android:layout_below="@+id/imageView_ViewFrag"
+            android:layout_below="@+id/playStopAudioBTN"
             android:backgroundTint="@color/colorPrimary"
             android:text="@string/delete_note"
             android:textColor="#ffffff" />
@@ -100,6 +100,26 @@
             android:layout_alignParentTop="false"
             android:layout_alignWithParentIfMissing="false"
             android:layout_below="@+id/messageScrollView" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="This note has an audio record!"
+            android:id="@+id/audioRecordText"
+            android:layout_below="@+id/imageView_ViewFrag"
+            android:layout_centerHorizontal="true"
+            android:textColor="#ff0000" />
+
+        <Button
+            android:id="@+id/playStopAudioBTN"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/colorPrimary"
+            android:text="Start Playing"
+            android:textColor="#ffffff"
+            android:layout_below="@+id/audioRecordText"
+            android:layout_centerHorizontal="true" />
 
     </RelativeLayout>
 </ScrollView>

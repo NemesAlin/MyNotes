@@ -9,6 +9,7 @@
     <!-- read and write permissions -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -53,6 +54,9 @@
                 <data android:mimeType="image/*" />
             </intent-filter>
         </activity>
+        <activity android:name=".AudioRecorder">
+        </activity>
+
         <activity
             android:name=".EditActivity"
             android:parentActivityName=".MainActivity"

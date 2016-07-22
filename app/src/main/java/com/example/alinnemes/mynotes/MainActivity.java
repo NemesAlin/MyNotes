@@ -16,8 +16,10 @@ public class MainActivity extends AppCompatActivity {
     public static final String NOTE_SUBJECT_EXTRA = "com.example.alinnemes.NOTE TITLE";
     public static final String NOTE_BODY_EXTRA = "com.example.alinnemes.NOTE BODY";
     public static final String NOTE_ID_EXTRA = "com.example.alinnemes.NOTE ID";
-    public static final String NOTE_PATH_EXTRA = "com.example.alinnemes.NOTE_PATH";
+    public static final String NOTE_PHOTOPATH_EXTRA = "com.example.alinnemes.NOTE_PHOTOPATH";
+    public static final String NOTE_AUDIOPATH_EXTRA = "com.example.alinnemes.NOTE_AUDIOPATH";
     public static final String NOTE_FRAGMENT_TO_LOAD = "com.example.alinnemes.FRAGMENT_TO_LOAD";
+
     private static LruCache<String, Bitmap> mMemoryCache;
 
     public enum FragmentToLaunch {VIEW, EDIT, ADD, SHARED}

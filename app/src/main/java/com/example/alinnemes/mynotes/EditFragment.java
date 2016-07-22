@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.Toast;
 
 import com.example.alinnemes.mynotes.data.MyNotesDBAdapter;
@@ -58,7 +59,6 @@ public class EditFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-
     }
 
 
@@ -77,6 +77,12 @@ public class EditFragment extends Fragment {
         noteBody = (EditText) view.findViewById(R.id.editNoteBody);
         mImageView = (ImageView) view.findViewById(R.id.imageView);
 
+        try {
+            createAudioFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         Button saveButton = (Button) view.findViewById(R.id.saveNote);
         Button discardButton = (Button) view.findViewById(R.id.discardNote);
 
@@ -85,7 +91,7 @@ public class EditFragment extends Fragment {
         if (noteSubject != null || noteBody != null) {
             noteSubject.setText(intent.getExtras().getString(MainActivity.NOTE_SUBJECT_EXTRA));
             noteBody.setText(intent.getExtras().getString(MainActivity.NOTE_BODY_EXTRA));
-            picturePath = intent.getExtras().getString(MainActivity.NOTE_PATH_EXTRA);
+            picturePath = intent.getExtras().getString(MainActivity.NOTE_PHOTOPATH_EXTRA);
 
             localNoteBodyVerif = noteBody.getText().toString();
             localNoteSubjectVerif = noteSubject.getText().toString();
@@ -248,6 +254,7 @@ public class EditFragment extends Fragment {
     }
 
     String mCurrentPhotoPath;
+    String mCurrentAudioPath;
 
     private File createImageFile() throws IOException {
         // Create an image file name
@@ -264,6 +271,22 @@ public class EditFragment extends Fragment {
         mCurrentPhotoPath = "file:" + image.getAbsolutePath();
         return image;
     }
+
+    private File createAudioFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyy.MM.dd_HH:mm:ss").format(new Date());
+        String imageFileName = "REC_" + timeStamp + "_";
+        File storageDir = getActivity().getExternalFilesDir("Audio");
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".3gp",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        mCurrentAudioPath = "file:" + image.getAbsolutePath();
+        return image;
+    }
+
 
     private void galleryAddPic() {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
@@ -289,6 +312,7 @@ public class EditFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 Log.d("Save Note", "NoteSubject: " + noteSubject.getText() + " NoteBody: " + noteBody.getText());
+
                 Intent intent = new Intent(getActivity(), MainActivity.class);
                 MyNotesDBAdapter myNotesDBAdapter = new MyNotesDBAdapter(getActivity().getBaseContext());
                 myNotesDBAdapter.open();
@@ -299,15 +323,15 @@ public class EditFragment extends Fragment {
                         Toast.makeText(getActivity(), "Cannot add a note without subject!", Toast.LENGTH_LONG).show();
                     } else {
                         Note note =
-                                myNotesDBAdapter.createNote(noteSubject.getText() + "", noteBody.getText() + "", picturePath);
+                                myNotesDBAdapter.createNote(noteSubject.getText() + "", noteBody.getText() + "", picturePath, "EDIT HERE!!!!!");
 
-                        Log.d("DEBUG THE ADD METHOD", "NOTE SUBJECT: " + note.getSubject() + ", NOTE BODY: " + note.getBody());
+                        Log.d("DEBUG THE ADD METHOD", "NOTE SUBJECT: " + note.getSubject() + ", NOTE BODY: " + note.getBody() + ", NOTE PHOTOPATH: " +note.getPhotoPath() + ",NOTE AUDIOPATH: " + note.getAudioPath());
 
                         startActivity(intent);
                     }
                 } else {
                     //otherwise, is an existing note, update it!
-                    long id = myNotesDBAdapter.updateNote(noteID, noteSubject.getText() + "", noteBody.getText() + "", picturePath);
+                    long id = myNotesDBAdapter.updateNote(noteID, noteSubject.getText() + "", noteBody.getText() + "", picturePath, "EDIT HERE!!!!!");
 
                     Log.d("DEBUG THE UPDATE METHOD", Long.toString(id));
 

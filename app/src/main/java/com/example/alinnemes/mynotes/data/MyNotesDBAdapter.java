@@ -17,22 +17,24 @@ import java.util.ArrayList;
 public class MyNotesDBAdapter {
 
     private static final String DATABASE_NAME = "mynotes.db";
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
 
     private static final String NOTE_TABLE = "note";
 
     private static final String COLUMN_ID = "_id";
     private static final String COLUMN_SUBJECT = "subject";
     private static final String COLUMN_BODY = "body";
-    private static final String COLUMN_FILEPATH = "path";
+    private static final String COLUMN_PHOTOPATH = "photo";
+    private static final String COLUMN_AUDIOPATH = "audio";
 
-    private String[] allColumns = {COLUMN_ID, COLUMN_SUBJECT, COLUMN_BODY, COLUMN_FILEPATH};
+    private String[] allColumns = {COLUMN_ID, COLUMN_SUBJECT, COLUMN_BODY, COLUMN_PHOTOPATH, COLUMN_AUDIOPATH};
 
     private static final String CREATE_TABLE = "CREATE TABLE " + NOTE_TABLE + " ( " +
             COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             COLUMN_SUBJECT + " TEXT NOT NULL, " +
             COLUMN_BODY + " TEXT NOT NULL, " +
-            COLUMN_FILEPATH + " TEXT " +
+            COLUMN_PHOTOPATH + " TEXT, " +
+            COLUMN_AUDIOPATH + " TEXT " +
             ");";
 
     private SQLiteDatabase sqLiteDatabase;
@@ -53,11 +55,12 @@ public class MyNotesDBAdapter {
         myNotesDbHelper.close();
     }
 
-    public Note createNote(String subject, String body, String path) {
+    public Note createNote(String subject, String body, String photoPath, String audioPath) {
         ContentValues values = new ContentValues();
         values.put(COLUMN_SUBJECT, subject);
         values.put(COLUMN_BODY, body);
-        values.put(COLUMN_FILEPATH, path);
+        values.put(COLUMN_PHOTOPATH, photoPath);
+        values.put(COLUMN_AUDIOPATH, audioPath);
 
         long insertId = sqLiteDatabase.insert(NOTE_TABLE, null, values);
 
@@ -69,11 +72,12 @@ public class MyNotesDBAdapter {
         return newNote;
     }
 
-    public long updateNote(long idToUpdate, String newSubject, String newBody, String newPath) {
+    public long updateNote(long idToUpdate, String newSubject, String newBody, String newPhotoPath, String newAudioPath) {
         ContentValues values = new ContentValues();
         values.put(COLUMN_SUBJECT, newSubject);
         values.put(COLUMN_BODY, newBody);
-        values.put(COLUMN_FILEPATH, newPath);
+        values.put(COLUMN_PHOTOPATH, newPhotoPath);
+        values.put(COLUMN_AUDIOPATH, newAudioPath);
 
         return sqLiteDatabase.update(NOTE_TABLE, values, COLUMN_ID + " = " + idToUpdate, null);
     }
@@ -107,7 +111,7 @@ public class MyNotesDBAdapter {
     }
 
     private Note cursorToNote(Cursor cursor) {
-        Note newNote = new Note(cursor.getInt(0), cursor.getString(1), cursor.getString(2),cursor.getString(3));
+        Note newNote = new Note(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4));
         return newNote;
     }
 

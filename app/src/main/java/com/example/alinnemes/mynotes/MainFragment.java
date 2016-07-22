@@ -1,7 +1,6 @@
 package com.example.alinnemes.mynotes;
 
 import android.annotation.TargetApi;
-import android.app.ActivityManager;
 import android.app.ActivityOptions;
 import android.app.ListFragment;
 import android.content.DialogInterface;
@@ -121,7 +120,8 @@ public class MainFragment extends ListFragment {
         intent.putExtra(MainActivity.NOTE_ID_EXTRA, note.getId());
         intent.putExtra(MainActivity.NOTE_SUBJECT_EXTRA, note.getSubject());
         intent.putExtra(MainActivity.NOTE_BODY_EXTRA, note.getBody());
-        intent.putExtra(MainActivity.NOTE_PATH_EXTRA, note.getPhotoPath());
+        intent.putExtra(MainActivity.NOTE_PHOTOPATH_EXTRA, note.getPhotoPath());
+        intent.putExtra(MainActivity.NOTE_AUDIOPATH_EXTRA,note.getAudioPath());
 
         switch (ftl) {
             case VIEW:
