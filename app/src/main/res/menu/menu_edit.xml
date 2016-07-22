@@ -10,16 +10,17 @@
 
     <item
         android:id="@+id/action_photo"
-        android:title="Take a photo"
         android:icon="@drawable/camera_icon"
-        app:showAsAction="ifRoom"
-        />
+        android:title="Take a photo"
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_gallery"
-        android:title="gallery_photo"
         android:icon="@drawable/gallery_icon"
-        app:showAsAction="ifRoom"
-        />
-
-
+        android:title="gallery_photo"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_record"
+        android:title="Audio Record"
+        app:showAsAction="ifRoom">
+    </item>
 </menu>
