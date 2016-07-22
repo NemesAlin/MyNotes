@@ -29,9 +29,9 @@ public class AudioRecorder{
         mFileName += "/audiorecordtest.3gp";
     }
 
-    public void onRecord(boolean start) {
+    public void onRecord(boolean start, String audioPath) {
         if (start) {
-            startRecording();
+            startRecording(audioPath);
         } else {
             stopRecording();
         }
@@ -61,11 +61,11 @@ public class AudioRecorder{
         mPlayer = null;
     }
 
-    public void startRecording() {
+    public void startRecording(String audioPath) {
         mRecorder = new MediaRecorder();
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        mRecorder.setOutputFile("file:/storage/emulated/0/Android/data/com.example.alinnemes.mynotes/files/Audio/REC_2016.07.22_15:07:07_-649051702.3gp");
+        mRecorder.setOutputFile(audioPath);
         mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
 
         try {
@@ -79,6 +79,7 @@ public class AudioRecorder{
 
     public void stopRecording() {
         mRecorder.stop();
+        mRecorder.reset();
         mRecorder.release();
         mRecorder = null;
     }

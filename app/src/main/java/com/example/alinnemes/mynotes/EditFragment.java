@@ -1,15 +1,18 @@
 package com.example.alinnemes.mynotes;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,7 +24,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.MediaController;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.alinnemes.mynotes.data.MyNotesDBAdapter;
@@ -48,8 +52,19 @@ public class EditFragment extends Fragment {
 
     public boolean newNote = false;
     public String picturePath;
+    public String audioPath;
     public File photoFile;
     private long noteID = 0;
+
+    private TextView notifAudioRecordTV;
+    private Button startStopREC;
+    private Button startStopPLAY;
+    boolean mStartRecording = true;
+    boolean mStartPlaying = true;
+
+    AudioRecorder audioRecorder = new AudioRecorder();
+
+
 
     public EditFragment() {
         setHasOptionsMenu(true);
@@ -76,12 +91,10 @@ public class EditFragment extends Fragment {
         noteSubject = (EditText) view.findViewById(R.id.editNoteSubject);
         noteBody = (EditText) view.findViewById(R.id.editNoteBody);
         mImageView = (ImageView) view.findViewById(R.id.imageView);
+        notifAudioRecordTV = (TextView) view.findViewById(R.id.audioRecordTextEdit);
+        startStopREC = (Button) view.findViewById(R.id.playStopRecordingBTN_EDIT);
+        startStopPLAY = (Button) view.findViewById(R.id.playStopPlayingBTN_EDIT);
 
-        try {
-            createAudioFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
         Button saveButton = (Button) view.findViewById(R.id.saveNote);
         Button discardButton = (Button) view.findViewById(R.id.discardNote);
@@ -92,6 +105,7 @@ public class EditFragment extends Fragment {
             noteSubject.setText(intent.getExtras().getString(MainActivity.NOTE_SUBJECT_EXTRA));
             noteBody.setText(intent.getExtras().getString(MainActivity.NOTE_BODY_EXTRA));
             picturePath = intent.getExtras().getString(MainActivity.NOTE_PHOTOPATH_EXTRA);
+            audioPath = intent.getExtras().getString(MainActivity.NOTE_AUDIOPATH_EXTRA);
 
             localNoteBodyVerif = noteBody.getText().toString();
             localNoteSubjectVerif = noteSubject.getText().toString();
@@ -105,6 +119,87 @@ public class EditFragment extends Fragment {
                     Toast.makeText(getActivity(), "The photo has been deleted from the phone's memory or cannot find!", Toast.LENGTH_SHORT).show();
                     picturePath = null;
                 }
+            }
+
+            if(audioPath!=null){
+                notifAudioRecordTV.setText("This note has an audio record!\nYou can edit it or play the record.");
+                try {
+                    startStopREC.setOnClickListener(new View.OnClickListener() {
+                        File audioFile = createAudioFile();
+
+                        @Override
+                        public void onClick(View view) {
+                            audioPath = audioFile.getAbsolutePath();
+                            audioRecorder.onRecord(mStartRecording,audioPath);
+                            if (mStartRecording) {
+                                startStopREC.setText("Stop recording");
+                            } else {
+                                startStopREC.setText("Start recording");
+
+                            }
+                            mStartRecording = !mStartRecording;
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                startStopPLAY.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        audioRecorder.onPlay(mStartPlaying,audioPath);
+                        if(mStartPlaying){
+                            startStopPLAY.setText("Stop Playing");
+                        }else{
+                            startStopPLAY.setText("Start Playing");
+                        }
+                        mStartPlaying = !mStartPlaying;
+                    }
+                });
+            }else{
+                final RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) startStopREC.getLayoutParams();
+                lp.addRule(RelativeLayout.CENTER_HORIZONTAL, 1);
+
+                notifAudioRecordTV.setText("No audio record for this note!\nDo you want to record something?");
+                startStopPLAY.setVisibility(View.GONE);
+                startStopREC.setLayoutParams(lp);
+                try {
+                    startStopREC.setOnClickListener(new View.OnClickListener() {
+                        File audioFile = createAudioFile();
+
+                        @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+                        @Override
+                        public void onClick(View view) {
+                            audioPath = audioFile.getAbsolutePath();
+                            audioRecorder.onRecord(mStartRecording,audioPath);
+                            if (mStartRecording) {
+                                startStopREC.setText("Stop recording");
+                            } else {
+                                startStopREC.setText("Start recording");
+                                if(audioPath!=null){
+                                    notifAudioRecordTV.setText("This note has an audio record!\nYou can edit it or play the record.");
+                                    startStopPLAY.setVisibility(View.VISIBLE);
+                                    lp.removeRule(RelativeLayout.CENTER_HORIZONTAL);
+                                    startStopREC.setLayoutParams(lp);
+                                }
+                            }
+                            mStartRecording = !mStartRecording;
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                startStopPLAY.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        audioRecorder.onPlay(mStartPlaying,audioPath);
+                        if(mStartPlaying){
+                            startStopPLAY.setText("Stop Playing");
+                        }else{
+                            startStopPLAY.setText("Start Playing");
+                        }
+                        mStartPlaying = !mStartPlaying;
+                    }
+                });
             }
             noteID = intent.getExtras().getInt(MainActivity.NOTE_ID_EXTRA, 0);
         }
@@ -274,17 +369,17 @@ public class EditFragment extends Fragment {
 
     private File createAudioFile() throws IOException {
         // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyy.MM.dd_HH:mm:ss").format(new Date());
-        String imageFileName = "REC_" + timeStamp + "_";
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String audioFileName = "REC_" + timeStamp + "_";
         File storageDir = getActivity().getExternalFilesDir("Audio");
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
+        File audio = File.createTempFile(
+                audioFileName,  /* prefix */
                 ".3gp",         /* suffix */
                 storageDir      /* directory */
         );
 
-        mCurrentAudioPath = "file:" + image.getAbsolutePath();
-        return image;
+        mCurrentAudioPath = "file:" + audio.getAbsolutePath();
+        return audio;
     }
 
 
@@ -323,15 +418,15 @@ public class EditFragment extends Fragment {
                         Toast.makeText(getActivity(), "Cannot add a note without subject!", Toast.LENGTH_LONG).show();
                     } else {
                         Note note =
-                                myNotesDBAdapter.createNote(noteSubject.getText() + "", noteBody.getText() + "", picturePath, "EDIT HERE!!!!!");
+                                myNotesDBAdapter.createNote(noteSubject.getText() + "", noteBody.getText() + "", picturePath, audioPath);
 
-                        Log.d("DEBUG THE ADD METHOD", "NOTE SUBJECT: " + note.getSubject() + ", NOTE BODY: " + note.getBody() + ", NOTE PHOTOPATH: " +note.getPhotoPath() + ",NOTE AUDIOPATH: " + note.getAudioPath());
+                        Log.d("DEBUG THE ADD METHOD", "NOTE SUBJECT: " + note.getSubject() + ", NOTE BODY: " + note.getBody() + ", NOTE PHOTOPATH: " + note.getPhotoPath() + ",NOTE AUDIOPATH: " + note.getAudioPath());
 
                         startActivity(intent);
                     }
                 } else {
                     //otherwise, is an existing note, update it!
-                    long id = myNotesDBAdapter.updateNote(noteID, noteSubject.getText() + "", noteBody.getText() + "", picturePath, "EDIT HERE!!!!!");
+                    long id = myNotesDBAdapter.updateNote(noteID, noteSubject.getText() + "", noteBody.getText() + "", picturePath, audioPath);
 
                     Log.d("DEBUG THE UPDATE METHOD", Long.toString(id));
 

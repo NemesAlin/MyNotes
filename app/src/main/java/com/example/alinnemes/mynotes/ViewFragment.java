@@ -38,7 +38,7 @@ public class ViewFragment extends Fragment {
     //buttons
     private Button deleteButton;
     private Button editButton;
-    private Button playStopAudioRecordBTN;
+    private Button startStopPLAYBTN;
     //strings
     private String picturePath;
     private String audioPath;
@@ -78,8 +78,8 @@ public class ViewFragment extends Fragment {
 
         deleteButton = (Button) view.findViewById(R.id.deleteNote);
         editButton = (Button) view.findViewById(R.id.editNote);
-        playStopAudioRecordBTN = (Button) view.findViewById(R.id.playStopAudioBTN);
-        playStopAudioRecordBTN.setVisibility(View.GONE);
+        startStopPLAYBTN = (Button) view.findViewById(R.id.playStopAudioBTN);
+        startStopPLAYBTN.setVisibility(View.GONE);
 
         Intent intent = getActivity().getIntent();
 
@@ -98,16 +98,16 @@ public class ViewFragment extends Fragment {
         }
         if (audioPath != null) {
             notifAudioRecordTV.setVisibility(View.VISIBLE);
-            playStopAudioRecordBTN.setVisibility(View.VISIBLE);
-
-            playStopAudioRecordBTN.setOnClickListener(new View.OnClickListener() {
+            startStopPLAYBTN.setVisibility(View.VISIBLE);
+;
+            startStopPLAYBTN.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     audioRecorder.onPlay(mStartPlaying,audioPath);
                     if (mStartPlaying) {
-                        playStopAudioRecordBTN.setText("Stop playing");
+                        startStopPLAYBTN.setText("Stop playing");
                     } else {
-                        playStopAudioRecordBTN.setText("Start playing");
+                        startStopPLAYBTN.setText("Start playing");
                     }
                     mStartPlaying = !mStartPlaying;
                 }
