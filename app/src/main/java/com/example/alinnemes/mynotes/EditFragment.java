@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
@@ -157,14 +158,6 @@ public class EditFragment extends Fragment {
             }
         });
         mImageView.setLongClickable(true);
-
-        mImageView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-
-                return false;
-            }
-        });
         registerForContextMenu(mImageView);
 
         return view;
@@ -289,6 +282,23 @@ public class EditFragment extends Fragment {
 
 
     @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        MenuItem action_record_item = menu.findItem(R.id.action_record);
+        MenuItem action_image_item = menu.findItem(R.id.action_image);
+        super.onPrepareOptionsMenu(menu);
+        if(audioPath==null){
+            action_record_item.setVisible(false);
+        }else{
+            action_record_item.setVisible(true);
+        }
+        if(picturePath==null){
+            action_image_item.setVisible(false);
+        }else{
+            action_image_item.setVisible(true);
+        }
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
         super.onCreateOptionsMenu(menu, inflater);
@@ -297,6 +307,7 @@ public class EditFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         switch (item.getItemId()) {
             case R.id.action_record:
                 audioPath = null;
@@ -304,7 +315,7 @@ public class EditFragment extends Fragment {
                 return true;
             case R.id.action_image:
                 mImageView.setImageResource(0);
-                picturePath=null;
+                picturePath = null;
                 return true;
             case R.id.action_photo:
                 dispatchTakePictureIntent();
