@@ -12,9 +12,9 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -34,6 +34,7 @@ import com.example.alinnemes.mynotes.model.Note;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -63,7 +64,6 @@ public class EditFragment extends Fragment {
     boolean mStartPlaying = true;
 
     AudioRecorder audioRecorder = new AudioRecorder();
-
 
 
     public EditFragment() {
@@ -121,86 +121,8 @@ public class EditFragment extends Fragment {
                 }
             }
 
-            if(audioPath!=null){
-                notifAudioRecordTV.setText("This note has an audio record!\nYou can edit it or play the record.");
-                try {
-                    startStopREC.setOnClickListener(new View.OnClickListener() {
-                        File audioFile = createAudioFile();
+            createOrRedrawAudioRecordContent();
 
-                        @Override
-                        public void onClick(View view) {
-                            audioPath = audioFile.getAbsolutePath();
-                            audioRecorder.onRecord(mStartRecording,audioPath);
-                            if (mStartRecording) {
-                                startStopREC.setText("Stop recording");
-                            } else {
-                                startStopREC.setText("Start recording");
-
-                            }
-                            mStartRecording = !mStartRecording;
-                        }
-                    });
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                startStopPLAY.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        audioRecorder.onPlay(mStartPlaying,audioPath);
-                        if(mStartPlaying){
-                            startStopPLAY.setText("Stop Playing");
-                        }else{
-                            startStopPLAY.setText("Start Playing");
-                        }
-                        mStartPlaying = !mStartPlaying;
-                    }
-                });
-            }else{
-                final RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) startStopREC.getLayoutParams();
-                lp.addRule(RelativeLayout.CENTER_HORIZONTAL, 1);
-
-                notifAudioRecordTV.setText("No audio record for this note!\nDo you want to record something?");
-                startStopPLAY.setVisibility(View.GONE);
-                startStopREC.setLayoutParams(lp);
-                try {
-                    startStopREC.setOnClickListener(new View.OnClickListener() {
-                        File audioFile = createAudioFile();
-
-                        @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-                        @Override
-                        public void onClick(View view) {
-                            audioPath = audioFile.getAbsolutePath();
-                            audioRecorder.onRecord(mStartRecording,audioPath);
-                            if (mStartRecording) {
-                                startStopREC.setText("Stop recording");
-                            } else {
-                                startStopREC.setText("Start recording");
-                                if(audioPath!=null){
-                                    notifAudioRecordTV.setText("This note has an audio record!\nYou can edit it or play the record.");
-                                    startStopPLAY.setVisibility(View.VISIBLE);
-                                    lp.removeRule(RelativeLayout.CENTER_HORIZONTAL);
-                                    startStopREC.setLayoutParams(lp);
-                                }
-                            }
-                            mStartRecording = !mStartRecording;
-                        }
-                    });
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                startStopPLAY.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        audioRecorder.onPlay(mStartPlaying,audioPath);
-                        if(mStartPlaying){
-                            startStopPLAY.setText("Stop Playing");
-                        }else{
-                            startStopPLAY.setText("Start Playing");
-                        }
-                        mStartPlaying = !mStartPlaying;
-                    }
-                });
-            }
             noteID = intent.getExtras().getInt(MainActivity.NOTE_ID_EXTRA, 0);
         }
         buildSaveConfirmDialog();
@@ -234,8 +156,124 @@ public class EditFragment extends Fragment {
                 }
             }
         });
+        mImageView.setLongClickable(true);
+
+        mImageView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+
+                return false;
+            }
+        });
+        registerForContextMenu(mImageView);
 
         return view;
+    }
+
+    public void createOrRedrawAudioRecordContent(){
+        if(audioPath!=null){
+            notifAudioRecordTV.setText("This note has an audio record!\nYou can edit it or play the record.");
+            try {
+                startStopREC.setOnClickListener(new View.OnClickListener() {
+                    File audioFile = createAudioFile();
+
+                    @Override
+                    public void onClick(View view) {
+                        audioPath = audioFile.getAbsolutePath();
+                        audioRecorder.onRecord(mStartRecording,audioPath);
+                        if (mStartRecording) {
+                            startStopREC.setText("Stop recording");
+                        } else {
+                            startStopREC.setText("Start recording");
+
+                        }
+                        mStartRecording = !mStartRecording;
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            startStopPLAY.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    audioRecorder.onPlay(mStartPlaying,audioPath);
+                    if(mStartPlaying){
+                        startStopPLAY.setText("Stop Playing");
+                    }else{
+                        startStopPLAY.setText("Start Playing");
+                    }
+                    mStartPlaying = !mStartPlaying;
+                }
+            });
+        }else{
+            final RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) startStopREC.getLayoutParams();
+            lp.addRule(RelativeLayout.CENTER_HORIZONTAL, 1);
+
+            notifAudioRecordTV.setText("No audio record for this note!\nDo you want to record something?");
+            startStopPLAY.setVisibility(View.GONE);
+            startStopREC.setLayoutParams(lp);
+            try {
+                startStopREC.setOnClickListener(new View.OnClickListener() {
+                    File audioFile = createAudioFile();
+
+                    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+                    @Override
+                    public void onClick(View view) {
+                        audioPath = audioFile.getAbsolutePath();
+                        audioRecorder.onRecord(mStartRecording,audioPath);
+                        if (mStartRecording) {
+                            startStopREC.setText("Stop recording");
+                        } else {
+                            startStopREC.setText("Start recording");
+                            if(audioPath!=null){
+                                notifAudioRecordTV.setText("This note has an audio record!\nYou can edit it or play the record.");
+                                startStopPLAY.setVisibility(View.VISIBLE);
+                                lp.removeRule(RelativeLayout.CENTER_HORIZONTAL);
+                                startStopREC.setLayoutParams(lp);
+                            }
+                        }
+                        mStartRecording = !mStartRecording;
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            startStopPLAY.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    audioRecorder.onPlay(mStartPlaying,audioPath);
+                    if(mStartPlaying){
+                        startStopPLAY.setText("Stop Playing");
+                    }else{
+                        startStopPLAY.setText("Start Playing");
+                    }
+                    mStartPlaying = !mStartPlaying;
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenu.ContextMenuInfo menuInfo) {
+        menu.setHeaderTitle("Image");
+        ArrayList<String> menuItems = new ArrayList<String>();
+        menuItems.add("Delete image");
+        for (int i = 0; i<menuItems.size(); i++) {
+            menu.add(Menu.NONE, i, i, menuItems.get(i));
+        }
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case 0:
+                mImageView.setImageResource(0);
+                picturePath=null;
+                return true;
+        }
+
+        return super.onContextItemSelected(item);
     }
 
     public void loadBitmap(String picturePath, ImageView imageView) {
@@ -261,8 +299,12 @@ public class EditFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_record:
-                Intent intent = new Intent(getActivity(), AudioRecorder.class);
-                startActivity(intent);
+                audioPath = null;
+                createOrRedrawAudioRecordContent();
+                return true;
+            case R.id.action_image:
+                mImageView.setImageResource(0);
+                picturePath=null;
                 return true;
             case R.id.action_photo:
                 dispatchTakePictureIntent();
@@ -406,7 +448,7 @@ public class EditFragment extends Fragment {
         confirmBuilder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Log.d("Save Note", "NoteSubject: " + noteSubject.getText() + " NoteBody: " + noteBody.getText());
+
 
                 Intent intent = new Intent(getActivity(), MainActivity.class);
                 MyNotesDBAdapter myNotesDBAdapter = new MyNotesDBAdapter(getActivity().getBaseContext());
@@ -427,11 +469,12 @@ public class EditFragment extends Fragment {
                 } else {
                     //otherwise, is an existing note, update it!
                     long id = myNotesDBAdapter.updateNote(noteID, noteSubject.getText() + "", noteBody.getText() + "", picturePath, audioPath);
-
                     Log.d("DEBUG THE UPDATE METHOD", Long.toString(id));
 
                     startActivity(intent);
                 }
+                Note note = myNotesDBAdapter.getNote(noteSubject.getText().toString());
+                Log.d("Save Note", "NoteSubject: " + note.getSubject() + " NoteBody: " + note.getBody() + " PhotoPath: " + note.getPhotoPath() + " AudioPath: " + note.getAudioPath());
 
                 myNotesDBAdapter.close();
 

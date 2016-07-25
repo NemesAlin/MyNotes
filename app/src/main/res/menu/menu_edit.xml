@@ -16,11 +16,16 @@
     <item
         android:id="@+id/action_gallery"
         android:icon="@drawable/gallery_icon"
-        android:title="gallery_photo"
+        android:title="Gallery"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_record"
-        android:title="Audio Record"
-        app:showAsAction="ifRoom">
+        android:title="Delete Record"
+        app:showAsAction="never">
+    </item>
+    <item
+        android:id="@+id/action_image"
+        android:title="Delete Image"
+        app:showAsAction="never">
     </item>
 </menu>

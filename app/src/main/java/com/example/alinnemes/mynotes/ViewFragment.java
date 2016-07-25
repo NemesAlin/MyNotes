@@ -122,7 +122,7 @@ public class ViewFragment extends Fragment {
                 ///Try something here!!! if don;t work, delete!!!!:)
                 MyNotesDBAdapter myNotesDBAdapter = new MyNotesDBAdapter(getActivity().getBaseContext());
                 myNotesDBAdapter.open();
-                Note note = myNotesDBAdapter.getNote(noteSubject.getText().toString(), noteBody.getText().toString());
+                Note note = myNotesDBAdapter.getNote(noteSubject.getText().toString());
                 myNotesDBAdapter.close();
                 Intent intent = new Intent(getActivity(), EditActivity.class);
                 intent.putExtra(MainActivity.NOTE_ID_EXTRA, note.getId());
@@ -194,7 +194,7 @@ public class ViewFragment extends Fragment {
             public void onClick(DialogInterface dialogInterface, int i) {
                 MyNotesDBAdapter myNotesDBAdapter = new MyNotesDBAdapter(getActivity().getBaseContext());
                 myNotesDBAdapter.open();
-                Note note = myNotesDBAdapter.getNote(noteSubject.getText().toString(), noteBody.getText().toString());
+                Note note = myNotesDBAdapter.getNote(noteSubject.getText().toString());
                 myNotesDBAdapter.deleteNote(note.getId());
                 Toast.makeText(getActivity(), "Note deleted: " + note.getSubject(), Toast.LENGTH_LONG).show();
                 myNotesDBAdapter.close();

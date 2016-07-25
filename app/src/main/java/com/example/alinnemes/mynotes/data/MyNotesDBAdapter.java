@@ -102,7 +102,7 @@ public class MyNotesDBAdapter {
         return allNotes;
     }
 
-    public Note getNote(String subject, String body) {
+    public Note getNote(String subject) {
         Cursor cursor = sqLiteDatabase.query(NOTE_TABLE, allColumns, COLUMN_SUBJECT + " = " + "\"" + subject + "\"", null, null, null, null);
         cursor.moveToFirst();
         Note note = cursorToNote(cursor);

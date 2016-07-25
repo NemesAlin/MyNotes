@@ -38,7 +38,7 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
         if (imageViewReference != null && bitmap != null) {
             final ImageView imageView = imageViewReference.get();
             if (imageView != null) {
-                imageView.setImageBitmap(Bitmap.createScaledBitmap(bitmap, 1000, 1500, true));
+                imageView.setImageBitmap(Bitmap.createScaledBitmap(bitmap, 350, 550, true));
             }
         }
     }
