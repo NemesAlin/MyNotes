@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
@@ -163,8 +162,8 @@ public class EditFragment extends Fragment {
         return view;
     }
 
-    public void createOrRedrawAudioRecordContent(){
-        if(audioPath!=null){
+    public void createOrRedrawAudioRecordContent() {
+        if (audioPath != null) {
             notifAudioRecordTV.setText("This note has an audio record!\nYou can edit it or play the record.");
             try {
                 startStopREC.setOnClickListener(new View.OnClickListener() {
@@ -173,7 +172,7 @@ public class EditFragment extends Fragment {
                     @Override
                     public void onClick(View view) {
                         audioPath = audioFile.getAbsolutePath();
-                        audioRecorder.onRecord(mStartRecording,audioPath);
+                        audioRecorder.onRecord(mStartRecording, audioPath);
                         if (mStartRecording) {
                             startStopREC.setText("Stop recording");
                         } else {
@@ -189,16 +188,16 @@ public class EditFragment extends Fragment {
             startStopPLAY.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    audioRecorder.onPlay(mStartPlaying,audioPath);
-                    if(mStartPlaying){
+                    audioRecorder.onPlay(mStartPlaying, audioPath);
+                    if (mStartPlaying) {
                         startStopPLAY.setText("Stop Playing");
-                    }else{
+                    } else {
                         startStopPLAY.setText("Start Playing");
                     }
                     mStartPlaying = !mStartPlaying;
                 }
             });
-        }else{
+        } else {
             final RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) startStopREC.getLayoutParams();
             lp.addRule(RelativeLayout.CENTER_HORIZONTAL, 1);
 
@@ -213,12 +212,12 @@ public class EditFragment extends Fragment {
                     @Override
                     public void onClick(View view) {
                         audioPath = audioFile.getAbsolutePath();
-                        audioRecorder.onRecord(mStartRecording,audioPath);
+                        audioRecorder.onRecord(mStartRecording, audioPath);
                         if (mStartRecording) {
                             startStopREC.setText("Stop recording");
                         } else {
                             startStopREC.setText("Start recording");
-                            if(audioPath!=null){
+                            if (audioPath != null) {
                                 notifAudioRecordTV.setText("This note has an audio record!\nYou can edit it or play the record.");
                                 startStopPLAY.setVisibility(View.VISIBLE);
                                 lp.removeRule(RelativeLayout.CENTER_HORIZONTAL);
@@ -234,10 +233,10 @@ public class EditFragment extends Fragment {
             startStopPLAY.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    audioRecorder.onPlay(mStartPlaying,audioPath);
-                    if(mStartPlaying){
+                    audioRecorder.onPlay(mStartPlaying, audioPath);
+                    if (mStartPlaying) {
                         startStopPLAY.setText("Stop Playing");
-                    }else{
+                    } else {
                         startStopPLAY.setText("Start Playing");
                     }
                     mStartPlaying = !mStartPlaying;
@@ -252,17 +251,17 @@ public class EditFragment extends Fragment {
         menu.setHeaderTitle("Image");
         ArrayList<String> menuItems = new ArrayList<String>();
         menuItems.add("Delete image");
-        for (int i = 0; i<menuItems.size(); i++) {
+        for (int i = 0; i < menuItems.size(); i++) {
             menu.add(Menu.NONE, i, i, menuItems.get(i));
         }
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case 0:
                 mImageView.setImageResource(0);
-                picturePath=null;
+                picturePath = null;
                 return true;
         }
 
@@ -286,14 +285,14 @@ public class EditFragment extends Fragment {
         MenuItem action_record_item = menu.findItem(R.id.action_record);
         MenuItem action_image_item = menu.findItem(R.id.action_image);
         super.onPrepareOptionsMenu(menu);
-        if(audioPath==null){
+        if (audioPath == null) {
             action_record_item.setVisible(false);
-        }else{
+        } else {
             action_record_item.setVisible(true);
         }
-        if(picturePath==null){
+        if (picturePath == null) {
             action_image_item.setVisible(false);
-        }else{
+        } else {
             action_image_item.setVisible(true);
         }
     }
@@ -310,6 +309,10 @@ public class EditFragment extends Fragment {
 
         switch (item.getItemId()) {
             case R.id.action_record:
+                File audioFile = new File(audioPath);
+                if (audioFile.exists()) {
+                    audioFile.delete();
+                }
                 audioPath = null;
                 createOrRedrawAudioRecordContent();
                 return true;
@@ -406,7 +409,7 @@ public class EditFragment extends Fragment {
 
     private File createImageFile() throws IOException {
         // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyy.MM.dd_HH:mm:ss").format(new Date());
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
