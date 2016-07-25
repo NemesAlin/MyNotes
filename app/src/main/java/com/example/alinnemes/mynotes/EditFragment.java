@@ -121,6 +121,7 @@ public class EditFragment extends Fragment {
                 }
             }
 
+            checkIfAudioRecordExist();
             createOrRedrawAudioRecordContent();
 
             noteID = intent.getExtras().getInt(MainActivity.NOTE_ID_EXTRA, 0);
@@ -162,8 +163,27 @@ public class EditFragment extends Fragment {
         return view;
     }
 
+
+    public boolean checkIfAudioRecordExist() {
+        File audioFile = null;
+        try {
+            audioFile = new File(audioPath);
+            if (audioFile.exists()) {
+                return true;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+        audioPath = null;
+        return false;
+    }
+
+
     public void createOrRedrawAudioRecordContent() {
-        if (audioPath != null) {
+
+        boolean existingFile = checkIfAudioRecordExist();
+
+        if (audioPath != null && existingFile) {
             notifAudioRecordTV.setText("This note has an audio record!\nYou can edit it or play the record.");
             try {
                 startStopREC.setOnClickListener(new View.OnClickListener() {
@@ -198,6 +218,7 @@ public class EditFragment extends Fragment {
                 }
             });
         } else {
+            audioPath = null;
             final RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) startStopREC.getLayoutParams();
             lp.addRule(RelativeLayout.CENTER_HORIZONTAL, 1);
 
@@ -312,8 +333,11 @@ public class EditFragment extends Fragment {
                 File audioFile = new File(audioPath);
                 if (audioFile.exists()) {
                     audioFile.delete();
+                    audioPath = null;
+                } else {
+                    Toast.makeText(getActivity(), "File cannot be found!", Toast.LENGTH_SHORT).show();
+                    audioPath = null;
                 }
-                audioPath = null;
                 createOrRedrawAudioRecordContent();
                 return true;
             case R.id.action_image:

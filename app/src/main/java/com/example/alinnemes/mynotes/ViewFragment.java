@@ -23,6 +23,8 @@ import android.widget.Toast;
 import com.example.alinnemes.mynotes.data.MyNotesDBAdapter;
 import com.example.alinnemes.mynotes.model.Note;
 
+import java.io.File;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -97,21 +99,25 @@ public class ViewFragment extends Fragment {
             }
         }
         if (audioPath != null) {
-            notifAudioRecordTV.setVisibility(View.VISIBLE);
-            startStopPLAYBTN.setVisibility(View.VISIBLE);
-;
-            startStopPLAYBTN.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    audioRecorder.onPlay(mStartPlaying,audioPath);
-                    if (mStartPlaying) {
-                        startStopPLAYBTN.setText("Stop playing");
-                    } else {
-                        startStopPLAYBTN.setText("Start playing");
+            File audioFile = new File(audioPath);
+            if (audioFile.exists()) {
+                notifAudioRecordTV.setVisibility(View.VISIBLE);
+                startStopPLAYBTN.setVisibility(View.VISIBLE);
+                startStopPLAYBTN.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        audioRecorder.onPlay(mStartPlaying,audioPath);
+                        if (mStartPlaying) {
+                            startStopPLAYBTN.setText("Stop playing");
+                        } else {
+                            startStopPLAYBTN.setText("Start playing");
+                        }
+                        mStartPlaying = !mStartPlaying;
                     }
-                    mStartPlaying = !mStartPlaying;
-                }
-            });
+                });
+            }else{
+                audioPath = null;
+            }
         }
 
         buildDeleteConfirmDialog();
