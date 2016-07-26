@@ -124,10 +124,9 @@ public class EditFragment extends Fragment {
 
             if (picturePath != null) {
                 try {
-//                    mImageView.setImageBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeFile(picturePath), 1000, 1500, true));
                     loadBitmap(picturePath, mImageView);
                 } catch (Exception e) {
-                    Toast.makeText(getActivity(), "The photo has been deleted from the phone's memory or cannot find!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), R.string.cannot_find_image, Toast.LENGTH_SHORT).show();
                     picturePath = null;
                 }
             }
@@ -149,22 +148,26 @@ public class EditFragment extends Fragment {
         discardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (picturePath != null || videoPath != null || audioPath != null) {
-                    if (!(localNoteSubjectVerif.equals(noteSubject.getText().toString())) || !(localNoteBodyVerif.equals(noteBody.getText().toString())) || !(localNotePicturePathVerif.equals(picturePath)) || !(localNoteAudioPathVerif.equals(audioPath)) || !(localNoteVideoPathVerif.equals(videoPath))) {
-                        EditActivity.CHANGES = 1;
-                        getActivity().onBackPressed();
+                try {
+                    if (picturePath != null || videoPath != null || audioPath != null) {
+                        if (!(localNoteSubjectVerif.equals(noteSubject.getText().toString())) || !(localNoteBodyVerif.equals(noteBody.getText().toString())) || !(localNotePicturePathVerif.equals(picturePath)) || !(localNoteAudioPathVerif.equals(audioPath)) || !(localNoteVideoPathVerif.equals(videoPath))) {
+                            EditActivity.CHANGES = 1;
+                            getActivity().onBackPressed();
+                        } else {
+                            EditActivity.CHANGES = 0;
+                            getActivity().onBackPressed();
+                        }
                     } else {
-                        EditActivity.CHANGES = 0;
-                        getActivity().onBackPressed();
+                        if (!(localNoteSubjectVerif.equals(noteSubject.getText().toString())) || !(localNoteBodyVerif.equals(noteBody.getText().toString()))) {
+                            EditActivity.CHANGES = 1;
+                            getActivity().onBackPressed();
+                        } else {
+                            EditActivity.CHANGES = 0;
+                            getActivity().onBackPressed();
+                        }
                     }
-                } else {
-                    if (!(localNoteSubjectVerif.equals(noteSubject.getText().toString())) || !(localNoteBodyVerif.equals(noteBody.getText().toString()))) {
-                        EditActivity.CHANGES = 1;
-                        getActivity().onBackPressed();
-                    } else {
-                        EditActivity.CHANGES = 0;
-                        getActivity().onBackPressed();
-                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         });
@@ -179,10 +182,7 @@ public class EditFragment extends Fragment {
             mVideoView.setVideoPath(videoPath);
             RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mVideoView.getLayoutParams();
             lp.height = 1000;
-//        lp.addRule(RelativeLayout.SCALE_Y,200);
             mVideoView.setLayoutParams(lp);
-//        mImageView.setMinimumHeight(200);
-
             mVideoView.requestFocus();
             mVideoView.setMediaController(new MediaController(getContext()));
             mVideoView.start();
@@ -208,7 +208,7 @@ public class EditFragment extends Fragment {
         boolean existingFile = checkIfAudioRecordExist();
 
         if (audioPath != null && existingFile) {
-            notifAudioRecordTV.setText("This note has an audio record!\nYou can edit it or play the record.");
+            notifAudioRecordTV.setText(R.string.audio_record_exist);
             try {
                 startStopREC.setOnClickListener(new View.OnClickListener() {
                     File audioFile = createAudioFile();
@@ -218,9 +218,9 @@ public class EditFragment extends Fragment {
                         audioPath = audioFile.getAbsolutePath();
                         audioRecorder.onRecord(mStartRecording, audioPath);
                         if (mStartRecording) {
-                            startStopREC.setText("Stop recording");
+                            startStopREC.setText(R.string.stop_recording);
                         } else {
-                            startStopREC.setText("Start recording");
+                            startStopREC.setText(R.string.start_recording);
 
                         }
                         mStartRecording = !mStartRecording;
@@ -234,9 +234,9 @@ public class EditFragment extends Fragment {
                 public void onClick(View view) {
                     audioRecorder.onPlay(mStartPlaying, audioPath);
                     if (mStartPlaying) {
-                        startStopPLAY.setText("Stop Playing");
+                        startStopPLAY.setText(R.string.stop_playing);
                     } else {
-                        startStopPLAY.setText("Start Playing");
+                        startStopPLAY.setText(R.string.start_playing);
                     }
                     mStartPlaying = !mStartPlaying;
                 }
@@ -246,7 +246,7 @@ public class EditFragment extends Fragment {
             final RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) startStopREC.getLayoutParams();
             lp.addRule(RelativeLayout.CENTER_HORIZONTAL, 1);
 
-            notifAudioRecordTV.setText("No audio record for this note!\nDo you want to record something?");
+            notifAudioRecordTV.setText(R.string.audio_record_dont_exist);
             startStopPLAY.setVisibility(View.GONE);
             startStopREC.setLayoutParams(lp);
             try {
@@ -259,11 +259,11 @@ public class EditFragment extends Fragment {
                         audioPath = audioFile.getAbsolutePath();
                         audioRecorder.onRecord(mStartRecording, audioPath);
                         if (mStartRecording) {
-                            startStopREC.setText("Stop recording");
+                            startStopREC.setText(R.string.stop_recording);
                         } else {
-                            startStopREC.setText("Start recording");
+                            startStopREC.setText(R.string.start_recording);
                             if (audioPath != null) {
-                                notifAudioRecordTV.setText("This note has an audio record!\nYou can edit it or play the record.");
+                                notifAudioRecordTV.setText(R.string.audio_record_exist);
                                 startStopPLAY.setVisibility(View.VISIBLE);
                                 lp.removeRule(RelativeLayout.CENTER_HORIZONTAL);
                                 startStopREC.setLayoutParams(lp);
@@ -280,9 +280,9 @@ public class EditFragment extends Fragment {
                 public void onClick(View view) {
                     audioRecorder.onPlay(mStartPlaying, audioPath);
                     if (mStartPlaying) {
-                        startStopPLAY.setText("Stop Playing");
+                        startStopPLAY.setText(R.string.stop_playing);
                     } else {
-                        startStopPLAY.setText("Start Playing");
+                        startStopPLAY.setText(R.string.start_playing);
                     }
                     mStartPlaying = !mStartPlaying;
                 }
@@ -293,9 +293,9 @@ public class EditFragment extends Fragment {
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v,
                                     ContextMenu.ContextMenuInfo menuInfo) {
-        menu.setHeaderTitle("Image");
+        menu.setHeaderTitle(R.string.image);
         ArrayList<String> menuItems = new ArrayList<String>();
-        menuItems.add("Delete image");
+        menuItems.add(String.valueOf(R.string.delete_image));
         for (int i = 0; i < menuItems.size(); i++) {
             menu.add(Menu.NONE, i, i, menuItems.get(i));
         }
@@ -361,7 +361,7 @@ public class EditFragment extends Fragment {
                     audioFile.delete();
                     audioPath = null;
                 } else {
-                    Toast.makeText(getActivity(), "File cannot be found!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), R.string.audio_file_cannot_be_found, Toast.LENGTH_SHORT).show();
                     audioPath = null;
                 }
                 createOrRedrawAudioRecordContent();
@@ -513,10 +513,10 @@ public class EditFragment extends Fragment {
 
     public void buildSaveConfirmDialog() {
         AlertDialog.Builder confirmBuilder = new AlertDialog.Builder(getActivity());
-        confirmBuilder.setTitle("Save");
-        confirmBuilder.setMessage("Are you sure you want to save the note?");
+        confirmBuilder.setTitle(R.string.save);
+        confirmBuilder.setMessage(R.string.save_q);
 
-        confirmBuilder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+        confirmBuilder.setPositiveButton(R.string.confirm_btn, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
@@ -528,7 +528,7 @@ public class EditFragment extends Fragment {
                 //if is a new note create it in database
                 if (newNote) {
                     if (noteSubject.getText().toString().equals("")) {
-                        Toast.makeText(getActivity(), "Cannot add a note without subject!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), R.string.cannot_add_a_note_without_subject, Toast.LENGTH_LONG).show();
                     } else {
                         Note note =
                                 myNotesDBAdapter.createNote(noteSubject.getText() + "", noteBody.getText() + "", picturePath, audioPath, videoPath);
@@ -553,7 +553,7 @@ public class EditFragment extends Fragment {
             }
         });
 
-        confirmBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        confirmBuilder.setNegativeButton(R.string.cancel_btn, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 //Nothing here

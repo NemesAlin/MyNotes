@@ -1,8 +1,12 @@
 package com.example.alinnemes.mynotes;
 
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
@@ -14,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -65,6 +70,7 @@ public class ViewFragment extends Fragment {
         setRetainInstance(true);
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -100,7 +106,7 @@ public class ViewFragment extends Fragment {
             try {
                 loadBitmap(picturePath, mImageView);
             } catch (Exception e) {
-                Toast.makeText(getActivity(), "The photo has been deleted from the phone's memory or cannot find!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.cannot_find_image, Toast.LENGTH_SHORT).show();
                 picturePath = null;
             }
         }
@@ -114,9 +120,9 @@ public class ViewFragment extends Fragment {
                     public void onClick(View view) {
                         audioRecorder.onPlay(mStartPlaying, audioPath);
                         if (mStartPlaying) {
-                            startStopPLAYBTN.setText("Stop playing");
+                            startStopPLAYBTN.setText(R.string.stop_playing);
                         } else {
-                            startStopPLAYBTN.setText("Start playing");
+                            startStopPLAYBTN.setText(R.string.start_playing);
                         }
                         mStartPlaying = !mStartPlaying;
                     }
@@ -209,17 +215,17 @@ public class ViewFragment extends Fragment {
 
     public void buildDeleteConfirmDialog() {
         AlertDialog.Builder confirmBuilder = new AlertDialog.Builder(getActivity());
-        confirmBuilder.setTitle("Delete");
-        confirmBuilder.setMessage("Are you sure you want to delete this note?");
+        confirmBuilder.setTitle(R.string.delete);
+        confirmBuilder.setMessage(R.string.delete_q);
 
-        confirmBuilder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+        confirmBuilder.setPositiveButton(R.string.confirm_btn, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 MyNotesDBAdapter myNotesDBAdapter = new MyNotesDBAdapter(getActivity().getBaseContext());
                 myNotesDBAdapter.open();
                 Note note = myNotesDBAdapter.getNote(noteSubject.getText().toString());
                 myNotesDBAdapter.deleteNote(note.getId());
-                Toast.makeText(getActivity(), "Note deleted: " + note.getSubject(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), getString(R.string.note_deleted) + " " + note.getSubject(), Toast.LENGTH_LONG).show();
                 myNotesDBAdapter.close();
 
                 Intent intent = new Intent(getActivity(), MainActivity.class);
@@ -227,7 +233,7 @@ public class ViewFragment extends Fragment {
             }
         });
 
-        confirmBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        confirmBuilder.setNegativeButton(R.string.cancel_btn, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 //Nothing here

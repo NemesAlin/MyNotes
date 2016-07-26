@@ -29,16 +29,31 @@
     <string name="save_note" translatable="true">Enregistrer Remarque</string>
     <string name="discard_note" translatable="true">Jeter Remarque</string>
     <string name="delete_note" translatable="true">Effacer Remarque</string>
-    <string name="action_share">Partager</string>
-    <string name="attachments"> Pièces jointes</string>
-    <string name="delete_image"> Supprimer l\'image</string>
-    <string name="delete_record">Supprimer l\'enregistrement</string>
-    <string name="gallery">Galerie</string>
-    <string name="take_a_photo">Prendre une photo</string>
-    <string name="take_a_video">Prenez une vidéo</string>
-    <string name="discard">Jeter</string>
-    <string name="discard_q"> Etes-vous sûr de vouloir jeter la note?</string>
-    <string name="cancel_btn">Annuler</string>
-    <string name="confirm_btn">Confirmer</string>
-    <string name="this_note_has_an_audio_record">This note has an audio record!</string>
+    <string name="action_share" translatable="true">Partager</string>
+    <string name="attachments" translatable="true"> Pièces jointes</string>
+    <string name="delete_image" translatable="true"> Supprimer l\'image</string>
+    <string name="delete_record" translatable="true">Supprimer l\'enregistrement</string>
+    <string name="gallery" translatable="true">Galerie</string>
+    <string name="take_a_photo" translatable="true">Prendre une photo</string>
+    <string name="take_a_video" translatable="true">Prenez une vidéo</string>
+    <string name="discard" translatable="true">Jeter</string>
+    <string name="discard_q" translatable="true"> Etes-vous sûr de vouloir jeter la note?</string>
+    <string name="cancel_btn" translatable="true">Annuler</string>
+    <string name="confirm_btn" translatable="true">Confirmer</string>
+    <string name="this_note_has_an_audio_record" translatable="true"> Cette note a un dossier audio!</string>
+    <string name="cannot_find_image" translatable="true">La photo a été supprimée de la mémoire du téléphone ou ne peut pas trouver!</string>
+    <string name="audio_file_cannot_be_found" translatable="true">Fichier audio ne peut pas être trouvé!</string>
+    <string name="audio_record_dont_exist" translatable="true">Aucun enregistrement audio pour cette note!\nVoulez-vous enregistrer quelque chose?</string>
+    <string name="audio_record_exist" translatable="true">Cette note a un dossier audio!\nVous pouvez le modifier ou de jouer l\'enregistrement.</string>
+    <string name="cannot_add_a_note_without_subject" translatable="true">Vous ne pouvez pas ajouter une note sans assujettir!</string>
+    <string name="delete" translatable="true"> Effacer</string>
+    <string name="delete_q" translatable="true"> Êtes-vous sûr de vouloir supprimer cette note?</string>
+    <string name="image" translatable="true">Image</string>
+    <string name="note_deleted" translatable="true"> Remarque supprimé:</string>
+    <string name="save" translatable="true">Sauvegarder</string>
+    <string name="save_q" translatable="true">Etes-vous sûr que vous voulez enregistrer la note?</string>
+    <string name="start_playing" translatable="true">Commencer à jouer</string>
+    <string name="start_recording" translatable="true">Commencer l\'enregistrement</string>
+    <string name="stop_playing" translatable="true">Arrête de jouer</string>
+    <string name="stop_recording" translatable="true">Arrêter l\'enregistrement</string>
 </resources>

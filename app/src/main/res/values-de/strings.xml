@@ -29,16 +29,31 @@
     <string name="save_note" translatable="true">Sichern Hinweis</string>
     <string name="discard_note" translatable="true">Verwerfen Hinweis</string>
     <string name="delete_note" translatable="true">löschen Hinweis</string>
-    <string name="action_share">Aktie</string>
-    <string name="attachments">Zubehör</string>
-    <string name="delete_image">Bild löschen</string>
-    <string name="delete_record"> Datensatz löschen</string>
-    <string name="gallery"> Galerie</string>
-    <string name="take_a_photo">Mach ein Foto</string>
-    <string name="take_a_video">Nehmen Sie ein Video</string>
-    <string name="discard">Verwerfen</string>
-    <string name="discard_q">Sind Sie sicher, dass Sie die Notiz zu verwerfen?</string>
-    <string name="cancel_btn">Stornieren</string>
-    <string name="confirm_btn">Bestätigen</string>
-    <string name="this_note_has_an_audio_record">This note has an audio record!</string>
+    <string name="action_share" translatable="true">Aktie</string>
+    <string name="attachments" translatable="true">Zubehör</string>
+    <string name="delete_image" translatable="true">Bild löschen</string>
+    <string name="delete_record" translatable="true"> Datensatz löschen</string>
+    <string name="gallery" translatable="true">Galerie</string>
+    <string name="take_a_photo" translatable="true">Mach ein Foto</string>
+    <string name="take_a_video" translatable="true">Nehmen Sie ein Video</string>
+    <string name="discard" translatable="true">Verwerfen</string>
+    <string name="discard_q" translatable="true">Sind Sie sicher, dass Sie die Notiz zu verwerfen?</string>
+    <string name="cancel_btn" translatable="true">Stornieren</string>
+    <string name="confirm_btn" translatable="true">Bestätigen</string>
+    <string name="this_note_has_an_audio_record" translatable="true">Diese Note hat einen Audioaufnahmen!</string>
+    <string name="cannot_find_image" translatable="true"> Das Foto wurde aus dem Telefonspeicher gelöscht oder kann nicht gefunden werden!</string>
+    <string name="audio_file_cannot_be_found" translatable="true">Audio -Datei kann nicht gefunden werden!</string>
+    <string name="audio_record_dont_exist" translatable="true">Kein Audioaufnahmen für diesen Hinweis!\nWollen Sie etwas aufnehmen?</string>
+    <string name="audio_record_exist" translatable="true">Diese Note hat einen Audioaufnahmen!\nSie können ihn bearbeiten oder die Aufzeichnung spielen.</string>
+    <string name="cannot_add_a_note_without_subject" translatable="true">Kann nicht eine Notiz ohne Thema hinzufügen!</string>
+    <string name="delete" translatable="true">Löschen</string>
+    <string name="delete_q" translatable="true"> Sind Sie sicher, dass Sie diese Notiz löschen?</string>
+    <string name="image" translatable="true">Image</string>
+    <string name="note_deleted" translatable="true">Gelöscht Hinweis: </string>
+    <string name="save" translatable="true">Sparen</string>
+    <string name="save_q" translatable="true">Sind Sie sicher, dass Sie die Notiz zu speichern?</string>
+    <string name="start_playing" translatable="true">Starten Sie die Wiedergabe</string>
+    <string name="start_recording" translatable="true">Starte die Aufnahme</string>
+    <string name="stop_playing" translatable="true">Hör auf zu spielen</string>
+    <string name="stop_recording" translatable="true">Höre auf aufzunehmen</string>
 </resources>

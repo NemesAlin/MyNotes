@@ -137,10 +137,10 @@ public class MainFragment extends ListFragment {
 
     public void buildDeleteConfirmDialog() {
         AlertDialog.Builder confirmBuilder = new AlertDialog.Builder(getActivity());
-        confirmBuilder.setTitle("Delete");
-        confirmBuilder.setMessage("Are you sure you want to delete this note?");
+        confirmBuilder.setTitle(R.string.delete);
+        confirmBuilder.setMessage(R.string.delete_q);
 
-        confirmBuilder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+        confirmBuilder.setPositiveButton(R.string.confirm_btn, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 int rowPosition = getPositionToDeleteNote();
@@ -151,12 +151,12 @@ public class MainFragment extends ListFragment {
                 notes.clear();
                 notes.addAll(myNotesDBAdapter.getAllNotes());
                 noteAdapter.notifyDataSetChanged();
-                Toast.makeText(getActivity(), "Note deleted: " + note.getSubject(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), getString(R.string.note_deleted) + " " + note.getSubject(), Toast.LENGTH_LONG).show();
                 myNotesDBAdapter.close();
             }
         });
 
-        confirmBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        confirmBuilder.setNegativeButton(R.string.cancel_btn, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 //Nothing here
