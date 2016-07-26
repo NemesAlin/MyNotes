@@ -1,32 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="true">My Notes</string>
-    <string name="add_note" translatable="true">Add Note</string>
-    <string name="action_settings" translatable="true">Settings</string>
+    <string name="app_name" translatable="true">Meine Notizen</string>
+    <string name="add_note" translatable="true">Notiz hinzufügen</string>
+    <string name="action_settings" translatable="true">Einstellungen</string>
 
 
     <!--Fragments titles-->
-    <string name="title_view_fragment" translatable="true">View Note</string>
-    <string name="title_add_fragment" translatable="true">Add Note</string>
-    <string name="title_edit_fragment" translatable="true">Edit Note</string>
+    <string name="title_view_fragment" translatable="true">Ansicht Hinweis</string>
+    <string name="title_add_fragment" translatable="true">Notiz hinzufügen</string>
+    <string name="title_edit_fragment" translatable="true"> Notiz bearbeiten</string>
 
-    <string name="body_description" translatable="true">Body Description!</string>
-    <string name="note_title" translatable="true">Note Title</string>
+    <string name="body_description" translatable="true">Körper Beschreibung !</string>
+    <string name="note_title" translatable="true"> Hinweis Titel</string>
 
     <!--Long press Menu-->
-    <string name="delete_menu" translatable="true">Delete</string>
-    <string name="edit_menu" translatable="true">Edit</string>
+    <string name="delete_menu" translatable="true">Löschen</string>
+    <string name="edit_menu" translatable="true">Bearbeiten</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="note_subject" translatable="true">Note Subject</string>
-    <string name="note_body" translatable="true">Note body</string>
+    <string name="note_subject" translatable="true">Hinweis Betreff</string>
+    <string name="note_body" translatable="true">Hinweis Körper</string>
 
 
-    <string name="new_note_body" translatable="true">New Note Body</string>
+    <string name="new_note_body" translatable="true">Neue Notiz Körper</string>
 
     <!--Buttons titles-->
-    <string name="edit_note" translatable="true">Edit Note</string>
-    <string name="save_note" translatable="true">Save Note</string>
-    <string name="discard_note" translatable="true">Discard Note</string>
-    <string name="delete_note" translatable="true">Delete Note</string>
+    <string name="edit_note" translatable="true">Notiz bearbeiten</string>
+    <string name="save_note" translatable="true">Sichern Hinweis</string>
+    <string name="discard_note" translatable="true">Verwerfen Hinweis</string>
+    <string name="delete_note" translatable="true">löschen Hinweis</string>
+    <string name="action_share">Aktie</string>
+    <string name="attachments">Zubehör</string>
+    <string name="delete_image">Bild löschen</string>
+    <string name="delete_record"> Datensatz löschen</string>
+    <string name="gallery"> Galerie</string>
+    <string name="take_a_photo">Mach ein Foto</string>
+    <string name="take_a_video">Nehmen Sie ein Video</string>
+    <string name="discard">Verwerfen</string>
+    <string name="discard_q">Sind Sie sicher, dass Sie die Notiz zu verwerfen?</string>
+    <string name="cancel_btn">Stornieren</string>
+    <string name="confirm_btn">Bestätigen</string>
 </resources>

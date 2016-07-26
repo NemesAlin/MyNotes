@@ -29,4 +29,15 @@
     <string name="save_note" translatable="true">Enregistrer Remarque</string>
     <string name="discard_note" translatable="true">Jeter Remarque</string>
     <string name="delete_note" translatable="true">Effacer Remarque</string>
+    <string name="action_share">Partager</string>
+    <string name="attachments"> Pièces jointes</string>
+    <string name="delete_image"> Supprimer l\'image</string>
+    <string name="delete_record">Supprimer l\'enregistrement</string>
+    <string name="gallery">Galerie</string>
+    <string name="take_a_photo">Prendre une photo</string>
+    <string name="take_a_video">Prenez une vidéo</string>
+    <string name="discard">Jeter</string>
+    <string name="discard_q"> Etes-vous sûr de vouloir jeter la note?</string>
+    <string name="cancel_btn">Annuler</string>
+    <string name="confirm_btn">Confirmer</string>
 </resources>

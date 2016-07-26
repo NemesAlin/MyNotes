@@ -94,13 +94,27 @@
             android:layout_alignParentStart="true"
             android:layout_below="@+id/messageScrollView"/>
 
+        <VideoView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/videoView_EDIT"
+
+            android:visibility="visible"
+            android:layout_below="@+id/imageView"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentStart="true"/>
+
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="No audio record for this note!\nDo you want to record something?"
             android:id="@+id/audioRecordTextEdit"
-            android:layout_below="@+id/imageView"
+            android:layout_below="@+id/videoView_EDIT"
             android:textColor="#ff0000"
             android:layout_centerHorizontal="true"
             android:textAlignment="center" />

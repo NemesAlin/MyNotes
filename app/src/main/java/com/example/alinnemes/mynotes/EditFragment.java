@@ -24,9 +24,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.example.alinnemes.mynotes.data.MyNotesDBAdapter;
 import com.example.alinnemes.mynotes.model.Note;
@@ -45,6 +47,7 @@ public class EditFragment extends Fragment {
     private AlertDialog saveConfirmDialogObject;
     private EditText noteSubject, noteBody;
     private ImageView mImageView;
+    private VideoView mVideoView;
     public String localNoteSubjectVerif = "";
     public String localNoteBodyVerif = "";
     public String localNotePathVerif = "";
@@ -91,14 +94,24 @@ public class EditFragment extends Fragment {
         noteSubject = (EditText) view.findViewById(R.id.editNoteSubject);
         noteBody = (EditText) view.findViewById(R.id.editNoteBody);
         mImageView = (ImageView) view.findViewById(R.id.imageView);
+        mVideoView = (VideoView) view.findViewById(R.id.videoView_EDIT);
         notifAudioRecordTV = (TextView) view.findViewById(R.id.audioRecordTextEdit);
         startStopREC = (Button) view.findViewById(R.id.playStopRecordingBTN_EDIT);
         startStopPLAY = (Button) view.findViewById(R.id.playStopPlayingBTN_EDIT);
 
+        mVideoView.setVideoPath("/storage/emulated/0/DCIM/100MEDIA/VIDEO0001.mp4");
+        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mVideoView.getLayoutParams();
+        lp.height = 500;
+//        lp.addRule(RelativeLayout.SCALE_Y,200);
+        mVideoView.setLayoutParams(lp);
+//        mImageView.setMinimumHeight(200);
+
+        mVideoView.requestFocus();
+        mVideoView.setMediaController(new MediaController(getContext()));
+        mVideoView.start();
 
         Button saveButton = (Button) view.findViewById(R.id.saveNote);
         Button discardButton = (Button) view.findViewById(R.id.discardNote);
-
 
         Intent intent = getActivity().getIntent();
         if (noteSubject != null || noteBody != null) {
@@ -165,7 +178,7 @@ public class EditFragment extends Fragment {
 
 
     public boolean checkIfAudioRecordExist() {
-        File audioFile = null;
+        File audioFile;
         try {
             audioFile = new File(audioPath);
             if (audioFile.exists()) {
@@ -321,6 +334,9 @@ public class EditFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
+        menu.setGroupVisible(R.id.group_attach, true);
+        menu.setGroupEnabled(R.id.group_attach, true);
+        menu.setGroupCheckable(R.id.group_attach, true, true);
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_edit, menu);
     }
@@ -346,6 +362,9 @@ public class EditFragment extends Fragment {
                 return true;
             case R.id.action_photo:
                 dispatchTakePictureIntent();
+                return true;
+            case R.id.action_video:
+                dispatchTakeVideoIntent();
                 return true;
             case R.id.action_gallery:
                 pickImageFromGallery();
@@ -375,9 +394,10 @@ public class EditFragment extends Fragment {
     }
 
 
-    ////method to intent to the camera hardware
+    ////methods to intent to the camera hardware
     static final int REQUEST_IMAGE_CAPTURE = 1;
     static final int REQUEST_IMAGE_PICK = 2;
+    static final int REQUEST_VIDEO_CAPTURE = 3;
 
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -401,23 +421,42 @@ public class EditFragment extends Fragment {
         }
     }
 
+    private void dispatchTakeVideoIntent() {
+        Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        if (takeVideoIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivityForResult(takeVideoIntent, REQUEST_VIDEO_CAPTURE);
+        }
+    }
+
+    private void pickImageFromGallery() {
+        Intent pickImage = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(pickImage, REQUEST_IMAGE_PICK);
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMAGE_PICK && resultCode == Activity.RESULT_OK && null != data) {
             Uri selectedImage = data.getData();
-            picturePath = getPhotoPath(selectedImage);
+            picturePath = getPhotoVideoPath(selectedImage);
             loadBitmap(picturePath, mImageView);
         } else if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
             Uri selectedImage = data.getData();
-            picturePath = getPhotoPath(selectedImage);
+            picturePath = getPhotoVideoPath(selectedImage);
             loadBitmap(picturePath, mImageView);
             galleryAddPic();///curios!!!!!
+        } else if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == Activity.RESULT_OK) {
+            Uri videoUri = data.getData();
+            mVideoView.setVideoPath(getPhotoVideoPath(videoUri));
+            mVideoView.requestFocus();
+            mVideoView.setMediaController(new MediaController(getContext()));
+            mVideoView.start();
+
         }
 
     }
 
-    public String getPhotoPath(Uri uri) {
+    public String getPhotoVideoPath(Uri uri) {
         String[] projection = {MediaStore.Images.Media.DATA};
         Cursor cursor = getActivity().getContentResolver().query(uri, projection, null, null, null);
         if (cursor == null) return null;
@@ -469,11 +508,6 @@ public class EditFragment extends Fragment {
         Uri contentUri = Uri.fromFile(f);
         mediaScanIntent.setData(contentUri);
         getActivity().sendBroadcast(mediaScanIntent);
-    }
-
-    private void pickImageFromGallery() {
-        Intent pickImage = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(pickImage, REQUEST_IMAGE_PICK);
     }
 
     ////^^^^^^^--------methods to intent to the camera hardware

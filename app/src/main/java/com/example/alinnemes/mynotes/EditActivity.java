@@ -37,10 +37,10 @@ public class EditActivity extends AppCompatActivity {
         String frag = getSupportFragmentManager().findFragmentById(R.id.note_container).getClass().getName();
         if (frag.equals("com.example.alinnemes.mynotes.EditFragment") && CHANGES == 1) {
             new AlertDialog.Builder(this)
-                    .setTitle("Discard")
-                    .setMessage("Are you sure you want to discard the note?")
-                    .setNegativeButton("Cancel", null)
-                    .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                    .setTitle(R.string.discard)
+                    .setMessage(R.string.discard_q)
+                    .setNegativeButton(R.string.cancel_btn, null)
+                    .setPositiveButton(R.string.confirm_btn, new DialogInterface.OnClickListener() {
 
                         public void onClick(DialogInterface arg0, int arg1) {
                             EditActivity.super.onBackPressed();

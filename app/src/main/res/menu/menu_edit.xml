@@ -8,24 +8,46 @@
         android:title="@string/action_settings"
         app:showAsAction="never" />
 
-    <item
-        android:id="@+id/action_photo"
-        android:icon="@drawable/camera_icon"
-        android:title="Take a photo"
-        app:showAsAction="ifRoom" />
-    <item
-        android:id="@+id/action_gallery"
-        android:icon="@drawable/gallery_icon"
-        android:title="Gallery"
-        app:showAsAction="ifRoom" />
+    <group
+        android:id= "@+id/group_attach"
+        android:icon = "@drawable/loader"
+        app:showAsAction="ifRoom"
+        android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/attach_item"
+            android:title="@string/attachments"
+            android:icon="@drawable/attach_icon"
+            app:showAsAction="always">
+            <menu>
+                <item
+                    android:id="@+id/action_video"
+                    android:title="@string/take_a_video"
+                    android:icon="@drawable/video_icon"
+                    app:showAsAction="collapseActionView"/>
+                <item
+                    android:id="@+id/action_photo"
+                    android:title="@string/take_a_photo"
+                    app:showAsAction="collapseActionView"
+                    android:icon="@drawable/camera_icon"/>
+                <item
+                    android:id="@+id/action_gallery"
+                    android:title="Gallery"
+                    app:showAsAction="collapseActionView"
+                    android:icon="@drawable/gallery_icon"/>
+            </menu>
+        </item>
+
+    </group>
+
     <item
         android:id="@+id/action_record"
-        android:title="Delete Record"
+        android:title="@string/delete_record"
         app:showAsAction="never">
     </item>
     <item
         android:id="@+id/action_image"
-        android:title="Delete Image"
+        android:title="@string/delete_image"
         app:showAsAction="never">
     </item>
 </menu>

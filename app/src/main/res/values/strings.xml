@@ -29,4 +29,14 @@
     <string name="save_note" translatable="true">Save Note</string>
     <string name="discard_note" translatable="true">Discard Note</string>
     <string name="delete_note" translatable="true">Delete Note</string>
+    <string name="delete_record">Delete Record</string>
+    <string name="delete_image">Delete Image</string>
+    <string name="attachments">Attachments</string>
+    <string name="take_a_video">Take a video</string>
+    <string name="take_a_photo">Take a photo</string>
+    <string name="discard">Discard</string>
+    <string name="gallery">Gallery</string>
+    <string name="discard_q">Are you sure you want to discard the note?</string>
+    <string name="confirm_btn">Confirm</string>
+    <string name="cancel_btn">Cancel</string>
 </resources>

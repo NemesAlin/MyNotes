@@ -38,22 +38,22 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
         if (imageViewReference != null && bitmap != null) {
             final ImageView imageView = imageViewReference.get();
             if (imageView != null) {
-                imageView.setImageBitmap(Bitmap.createScaledBitmap(bitmap, 350, 550, true));
+                imageView.setImageBitmap(Bitmap.createScaledBitmap(bitmap, 480, 800, true));
             }
         }
     }
-
-    static class AsyncDrawable extends BitmapDrawable {
-        private final WeakReference<BitmapWorkerTask> bitmapWorkerTaskWeakReference;
-
-        public AsyncDrawable(Resources res, Bitmap bitmap, BitmapWorkerTask bitmapWorkerTask) {
-            super(res, bitmap);
-            bitmapWorkerTaskWeakReference = new WeakReference<BitmapWorkerTask>(bitmapWorkerTask);
-        }
-
-        public BitmapWorkerTask getBitmapWorkerTask() {
-            return bitmapWorkerTaskWeakReference.get();
-        }
-    }
+//
+//    static class AsyncDrawable extends BitmapDrawable {
+//        private final WeakReference<BitmapWorkerTask> bitmapWorkerTaskWeakReference;
+//
+//        public AsyncDrawable(Resources res, Bitmap bitmap, BitmapWorkerTask bitmapWorkerTask) {
+//            super(res, bitmap);
+//            bitmapWorkerTaskWeakReference = new WeakReference<BitmapWorkerTask>(bitmapWorkerTask);
+//        }
+//
+//        public BitmapWorkerTask getBitmapWorkerTask() {
+//            return bitmapWorkerTaskWeakReference.get();
+//        }
+//    }
 
 }
