@@ -40,4 +40,5 @@
     <string name="discard_q">Sind Sie sicher, dass Sie die Notiz zu verwerfen?</string>
     <string name="cancel_btn">Stornieren</string>
     <string name="confirm_btn">Bestätigen</string>
+    <string name="this_note_has_an_audio_record">This note has an audio record!</string>
 </resources>

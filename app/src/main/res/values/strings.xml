@@ -39,4 +39,5 @@
     <string name="discard_q">Are you sure you want to discard the note?</string>
     <string name="confirm_btn">Confirm</string>
     <string name="cancel_btn">Cancel</string>
+    <string name="this_note_has_an_audio_record">This note has an audio record!</string>
 </resources>

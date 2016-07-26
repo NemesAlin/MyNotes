@@ -54,8 +54,6 @@
                 <data android:mimeType="image/*" />
             </intent-filter>
         </activity>
-        <activity android:name=".AudioRecorder">
-        </activity>
 
         <activity
             android:name=".EditActivity"
@@ -66,7 +64,8 @@
                 android:value="com.example.alinnemes.mynotes.MainActivity" />
         </activity>
 
-        <activity android:name=".SplashActivity"
+        <activity
+            android:name=".SplashActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

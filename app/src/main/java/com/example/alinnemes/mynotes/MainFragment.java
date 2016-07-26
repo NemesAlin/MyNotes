@@ -105,12 +105,12 @@ public class MainFragment extends ListFragment {
         return super.onContextItemSelected(item);
     }
 
-    private void setPositionToDeleteNote(int pos) {
-        this.pos = pos;
-    }
-
     private int getPositionToDeleteNote() {
         return pos;
+    }
+
+    private void setPositionToDeleteNote(int pos) {
+        this.pos = pos;
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -121,7 +121,8 @@ public class MainFragment extends ListFragment {
         intent.putExtra(MainActivity.NOTE_SUBJECT_EXTRA, note.getSubject());
         intent.putExtra(MainActivity.NOTE_BODY_EXTRA, note.getBody());
         intent.putExtra(MainActivity.NOTE_PHOTOPATH_EXTRA, note.getPhotoPath());
-        intent.putExtra(MainActivity.NOTE_AUDIOPATH_EXTRA,note.getAudioPath());
+        intent.putExtra(MainActivity.NOTE_AUDIOPATH_EXTRA, note.getAudioPath());
+        intent.putExtra(MainActivity.NOTE_VIDEOPATH_EXTRA, note.getVideoPath());
 
         switch (ftl) {
             case VIEW:

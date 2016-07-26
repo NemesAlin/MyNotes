@@ -10,13 +10,15 @@ public class Note {
     private String body;
     private String photoPath;
     private String audioPath;
+    private String videoPath;
 
-    public Note(int id, String subject, String body, String photoPath, String audioPath) {
+    public Note(int id, String subject, String body, String photoPath, String audioPath, String videoPath) {
         this.id = id;
         this.subject = subject;
         this.body = body;
         this.photoPath = photoPath;
         this.audioPath = audioPath;
+        this.videoPath = videoPath;
     }
 
     @Override
@@ -26,7 +28,17 @@ public class Note {
                 ", subject='" + subject + '\'' +
                 ", body='" + body + '\'' +
                 ", photoPath='" + photoPath + '\'' +
+                ", audioPath='" + audioPath + '\'' +
+                ", videoPath='" + videoPath + '\'' +
                 '}';
+    }
+
+    public String getVideoPath() {
+        return videoPath;
+    }
+
+    public void setVideoPath(String videoPath) {
+        this.videoPath = videoPath;
     }
 
     public String getAudioPath() {

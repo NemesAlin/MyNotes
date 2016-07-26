@@ -44,30 +44,34 @@ import java.util.Date;
  */
 public class EditFragment extends Fragment {
 
+    ////methods to intent to the camera hardware
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+    static final int REQUEST_IMAGE_PICK = 2;
+    static final int REQUEST_VIDEO_CAPTURE = 3;
+    private static final String TAKE_PHOTO_EXTRA = "TAKE_PHOTO_EXTRA";
+    public String localNoteSubjectVerif = "";
+    public String localNoteBodyVerif = "";
+    public String localNotePicturePathVerif = "";
+    public String localNoteAudioPathVerif = "";
+    public String localNoteVideoPathVerif = "";
+    public boolean newNote = false;
+    public String picturePath;
+    public String audioPath;
+    public String videoPath;
+    public File photoFile;
+    boolean mStartRecording = true;
+    boolean mStartPlaying = true;
+    AudioRecorder audioRecorder = new AudioRecorder();
+    String mCurrentPhotoPath;
+    String mCurrentAudioPath;
     private AlertDialog saveConfirmDialogObject;
     private EditText noteSubject, noteBody;
     private ImageView mImageView;
     private VideoView mVideoView;
-    public String localNoteSubjectVerif = "";
-    public String localNoteBodyVerif = "";
-    public String localNotePathVerif = "";
-    private static final String TAKE_PHOTO_EXTRA = "TAKE_PHOTO_EXTRA";
-
-
-    public boolean newNote = false;
-    public String picturePath;
-    public String audioPath;
-    public File photoFile;
     private long noteID = 0;
-
     private TextView notifAudioRecordTV;
     private Button startStopREC;
     private Button startStopPLAY;
-    boolean mStartRecording = true;
-    boolean mStartPlaying = true;
-
-    AudioRecorder audioRecorder = new AudioRecorder();
-
 
     public EditFragment() {
         setHasOptionsMenu(true);
@@ -78,7 +82,6 @@ public class EditFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -99,16 +102,6 @@ public class EditFragment extends Fragment {
         startStopREC = (Button) view.findViewById(R.id.playStopRecordingBTN_EDIT);
         startStopPLAY = (Button) view.findViewById(R.id.playStopPlayingBTN_EDIT);
 
-        mVideoView.setVideoPath("/storage/emulated/0/DCIM/100MEDIA/VIDEO0001.mp4");
-        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mVideoView.getLayoutParams();
-        lp.height = 500;
-//        lp.addRule(RelativeLayout.SCALE_Y,200);
-        mVideoView.setLayoutParams(lp);
-//        mImageView.setMinimumHeight(200);
-
-        mVideoView.requestFocus();
-        mVideoView.setMediaController(new MediaController(getContext()));
-        mVideoView.start();
 
         Button saveButton = (Button) view.findViewById(R.id.saveNote);
         Button discardButton = (Button) view.findViewById(R.id.discardNote);
@@ -119,10 +112,15 @@ public class EditFragment extends Fragment {
             noteBody.setText(intent.getExtras().getString(MainActivity.NOTE_BODY_EXTRA));
             picturePath = intent.getExtras().getString(MainActivity.NOTE_PHOTOPATH_EXTRA);
             audioPath = intent.getExtras().getString(MainActivity.NOTE_AUDIOPATH_EXTRA);
+            videoPath = intent.getExtras().getString(MainActivity.NOTE_VIDEOPATH_EXTRA);
 
             localNoteBodyVerif = noteBody.getText().toString();
             localNoteSubjectVerif = noteSubject.getText().toString();
-            localNotePathVerif = picturePath;
+            localNotePicturePathVerif = picturePath;
+            localNoteAudioPathVerif = audioPath;
+            localNoteVideoPathVerif = videoPath;
+
+            playVideo();
 
             if (picturePath != null) {
                 try {
@@ -151,8 +149,8 @@ public class EditFragment extends Fragment {
         discardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (localNotePathVerif != null || picturePath != null) {
-                    if (!(localNoteSubjectVerif.equals(noteSubject.getText().toString())) || !(localNoteBodyVerif.equals(noteBody.getText().toString())) || !(localNotePathVerif.equals(picturePath))) {
+                if (picturePath != null || videoPath != null || audioPath != null) {
+                    if (!(localNoteSubjectVerif.equals(noteSubject.getText().toString())) || !(localNoteBodyVerif.equals(noteBody.getText().toString())) || !(localNotePicturePathVerif.equals(picturePath)) || !(localNoteAudioPathVerif.equals(audioPath)) || !(localNoteVideoPathVerif.equals(videoPath))) {
                         EditActivity.CHANGES = 1;
                         getActivity().onBackPressed();
                     } else {
@@ -176,6 +174,20 @@ public class EditFragment extends Fragment {
         return view;
     }
 
+    public void playVideo() {
+        if (videoPath != null) {
+            mVideoView.setVideoPath(videoPath);
+            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mVideoView.getLayoutParams();
+            lp.height = 1000;
+//        lp.addRule(RelativeLayout.SCALE_Y,200);
+            mVideoView.setLayoutParams(lp);
+//        mImageView.setMinimumHeight(200);
+
+            mVideoView.requestFocus();
+            mVideoView.setMediaController(new MediaController(getContext()));
+            mVideoView.start();
+        }
+    }
 
     public boolean checkIfAudioRecordExist() {
         File audioFile;
@@ -190,7 +202,6 @@ public class EditFragment extends Fragment {
         audioPath = null;
         return false;
     }
-
 
     public void createOrRedrawAudioRecordContent() {
 
@@ -313,7 +324,6 @@ public class EditFragment extends Fragment {
 //        }
     }
 
-
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         MenuItem action_record_item = menu.findItem(R.id.action_record);
@@ -370,8 +380,8 @@ public class EditFragment extends Fragment {
                 pickImageFromGallery();
                 return true;
             case android.R.id.home:
-                if (localNotePathVerif != null || picturePath != null) {
-                    if (!(localNoteSubjectVerif.equals(noteSubject.getText().toString())) || !(localNoteBodyVerif.equals(noteBody.getText().toString())) || !(localNotePathVerif.equals(picturePath))) {
+                if (localNotePicturePathVerif != null || picturePath != null) {
+                    if (!(localNoteSubjectVerif.equals(noteSubject.getText().toString())) || !(localNoteBodyVerif.equals(noteBody.getText().toString())) || !(localNotePicturePathVerif.equals(picturePath))) {
                         EditActivity.CHANGES = 1;
                         getActivity().onBackPressed();
                     } else {
@@ -392,12 +402,6 @@ public class EditFragment extends Fragment {
         return super.onOptionsItemSelected(item);
 
     }
-
-
-    ////methods to intent to the camera hardware
-    static final int REQUEST_IMAGE_CAPTURE = 1;
-    static final int REQUEST_IMAGE_PICK = 2;
-    static final int REQUEST_VIDEO_CAPTURE = 3;
 
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -447,10 +451,8 @@ public class EditFragment extends Fragment {
             galleryAddPic();///curios!!!!!
         } else if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == Activity.RESULT_OK) {
             Uri videoUri = data.getData();
-            mVideoView.setVideoPath(getPhotoVideoPath(videoUri));
-            mVideoView.requestFocus();
-            mVideoView.setMediaController(new MediaController(getContext()));
-            mVideoView.start();
+            videoPath = getPhotoVideoPath(videoUri);
+            playVideo();
 
         }
 
@@ -466,9 +468,6 @@ public class EditFragment extends Fragment {
         cursor.close();
         return s;
     }
-
-    String mCurrentPhotoPath;
-    String mCurrentAudioPath;
 
     private File createImageFile() throws IOException {
         // Create an image file name
@@ -490,7 +489,7 @@ public class EditFragment extends Fragment {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String audioFileName = "REC_" + timeStamp + "_";
-        File storageDir = getActivity().getExternalFilesDir("Audio");
+        File storageDir = getActivity().getExternalFilesDir("Records");
         File audio = File.createTempFile(
                 audioFileName,  /* prefix */
                 ".3gp",         /* suffix */
@@ -532,7 +531,7 @@ public class EditFragment extends Fragment {
                         Toast.makeText(getActivity(), "Cannot add a note without subject!", Toast.LENGTH_LONG).show();
                     } else {
                         Note note =
-                                myNotesDBAdapter.createNote(noteSubject.getText() + "", noteBody.getText() + "", picturePath, audioPath);
+                                myNotesDBAdapter.createNote(noteSubject.getText() + "", noteBody.getText() + "", picturePath, audioPath, videoPath);
 
                         Log.d("DEBUG THE ADD METHOD", "NOTE SUBJECT: " + note.getSubject() + ", NOTE BODY: " + note.getBody() + ", NOTE PHOTOPATH: " + note.getPhotoPath() + ",NOTE AUDIOPATH: " + note.getAudioPath());
 
@@ -540,7 +539,7 @@ public class EditFragment extends Fragment {
                     }
                 } else {
                     //otherwise, is an existing note, update it!
-                    long id = myNotesDBAdapter.updateNote(noteID, noteSubject.getText() + "", noteBody.getText() + "", picturePath, audioPath);
+                    long id = myNotesDBAdapter.updateNote(noteID, noteSubject.getText() + "", noteBody.getText() + "", picturePath, audioPath, videoPath);
                     Log.d("DEBUG THE UPDATE METHOD", Long.toString(id));
 
                     startActivity(intent);

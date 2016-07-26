@@ -1,32 +1,24 @@
 package com.example.alinnemes.mynotes;
 
-import android.content.ContextWrapper;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
-import android.os.Environment;
 import android.util.Log;
 
-import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * Created by alin.nemes on 22-Jul-16.
  */
-public class AudioRecorder{
+public class AudioRecorder {
     private static final String LOG_TAG = "AudioRecordTest";
-    private static String mFileName = null;
 
-//    private RecordButton mRecordButton = null;
+    //    private RecordButton mRecordButton = null;
     private MediaRecorder mRecorder = null;
 
-//    private PlayButton   mPlayButton = null;
-    private MediaPlayer   mPlayer;
+    //    private PlayButton   mPlayButton = null;
+    private MediaPlayer mPlayer;
 
     public AudioRecorder() {
-        mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
-        mFileName += "/audiorecordtest.3gp";
     }
 
     public void onRecord(boolean start, String audioPath) {
@@ -37,7 +29,7 @@ public class AudioRecorder{
         }
     }
 
-    public void onPlay(boolean start,String audioPath) {
+    public void onPlay(boolean start, String audioPath) {
         if (start) {
             startPlaying(audioPath);
         } else {

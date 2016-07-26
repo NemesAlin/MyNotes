@@ -17,8 +17,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.MediaController;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.example.alinnemes.mynotes.data.MyNotesDBAdapter;
 import com.example.alinnemes.mynotes.model.Note;
@@ -30,6 +33,8 @@ import java.io.File;
  */
 public class ViewFragment extends Fragment {
 
+    boolean mStartPlaying = true;
+    AudioRecorder audioRecorder = new AudioRecorder();
     private AlertDialog deleteConfirmDialogObject;
     //textViews
     private TextView noteSubject;
@@ -37,6 +42,8 @@ public class ViewFragment extends Fragment {
     private TextView notifAudioRecordTV;
     //imageViews
     private ImageView mImageView;
+    //videoViews
+    private VideoView mVideoView;
     //buttons
     private Button deleteButton;
     private Button editButton;
@@ -44,11 +51,9 @@ public class ViewFragment extends Fragment {
     //strings
     private String picturePath;
     private String audioPath;
+    private String videoPath;
     private String noteSubjectSTR;
     private String noteBodySTR;
-
-    boolean mStartPlaying = true;
-    AudioRecorder audioRecorder = new AudioRecorder();
 
     public ViewFragment() {
         setHasOptionsMenu(true);
@@ -77,6 +82,7 @@ public class ViewFragment extends Fragment {
         notifAudioRecordTV = (TextView) view.findViewById(R.id.audioRecordText);
         notifAudioRecordTV.setVisibility(View.GONE);
         mImageView = (ImageView) view.findViewById(R.id.imageView_ViewFrag);
+        mVideoView = (VideoView) view.findViewById(R.id.videoView_VIEW);
 
         deleteButton = (Button) view.findViewById(R.id.deleteNote);
         editButton = (Button) view.findViewById(R.id.editNote);
@@ -85,11 +91,11 @@ public class ViewFragment extends Fragment {
 
         Intent intent = getActivity().getIntent();
 
-//        if(savedInstanceState!=null)
         noteSubject.setText(intent.getExtras().getString(MainActivity.NOTE_SUBJECT_EXTRA));
         noteBody.setText(intent.getExtras().getString(MainActivity.NOTE_BODY_EXTRA));
         picturePath = intent.getExtras().getString(MainActivity.NOTE_PHOTOPATH_EXTRA);
         audioPath = intent.getExtras().getString(MainActivity.NOTE_AUDIOPATH_EXTRA);
+        videoPath = intent.getExtras().getString(MainActivity.NOTE_VIDEOPATH_EXTRA);
         if (picturePath != null) {
             try {
                 loadBitmap(picturePath, mImageView);
@@ -106,7 +112,7 @@ public class ViewFragment extends Fragment {
                 startStopPLAYBTN.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        audioRecorder.onPlay(mStartPlaying,audioPath);
+                        audioRecorder.onPlay(mStartPlaying, audioPath);
                         if (mStartPlaying) {
                             startStopPLAYBTN.setText("Stop playing");
                         } else {
@@ -115,9 +121,19 @@ public class ViewFragment extends Fragment {
                         mStartPlaying = !mStartPlaying;
                     }
                 });
-            }else{
+            } else {
                 audioPath = null;
             }
+        }
+
+        if (videoPath != null) {
+            mVideoView.setVideoPath(videoPath);
+            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mVideoView.getLayoutParams();
+            lp.height = 1000;
+            mVideoView.setLayoutParams(lp);
+            mVideoView.requestFocus();
+            mVideoView.setMediaController(new MediaController(getContext()));
+            mVideoView.start();
         }
 
         buildDeleteConfirmDialog();
@@ -136,6 +152,7 @@ public class ViewFragment extends Fragment {
                 intent.putExtra(MainActivity.NOTE_BODY_EXTRA, note.getBody());
                 intent.putExtra(MainActivity.NOTE_PHOTOPATH_EXTRA, note.getPhotoPath());
                 intent.putExtra(MainActivity.NOTE_AUDIOPATH_EXTRA, note.getAudioPath());
+                intent.putExtra(MainActivity.NOTE_VIDEOPATH_EXTRA, note.getVideoPath());
                 intent.putExtra(MainActivity.NOTE_FRAGMENT_TO_LOAD, MainActivity.FragmentToLaunch.EDIT);
                 startActivity(intent);
             }

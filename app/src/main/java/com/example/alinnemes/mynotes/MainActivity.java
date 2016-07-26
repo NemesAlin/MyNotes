@@ -18,16 +18,26 @@ public class MainActivity extends AppCompatActivity {
     public static final String NOTE_ID_EXTRA = "com.example.alinnemes.NOTE ID";
     public static final String NOTE_PHOTOPATH_EXTRA = "com.example.alinnemes.NOTE_PHOTOPATH";
     public static final String NOTE_AUDIOPATH_EXTRA = "com.example.alinnemes.NOTE_AUDIOPATH";
+    public static final String NOTE_VIDEOPATH_EXTRA = "com.example.alinnemes.NOTE_VIDEOPATH";
     public static final String NOTE_FRAGMENT_TO_LOAD = "com.example.alinnemes.FRAGMENT_TO_LOAD";
+
 
     private static LruCache<String, Bitmap> mMemoryCache;
 
-    public enum FragmentToLaunch {VIEW, EDIT, ADD, SHARED}
+    public static void addBitmapToMemoryCache(String key, Bitmap bitmap) {
+        if (getBitmapFromMemCache(key) == null) {
+            mMemoryCache.put(key, bitmap);
+        }
+    }
 
     /* TODO: Modify the My Notes app to:
             * Support adding an image to the note by
             * Taking an image with the device’s Camera Create your own Custom Camera Canvas Select an existing image from the storage
     */
+
+    public static Bitmap getBitmapFromMemCache(String key) {
+        return mMemoryCache.get(key);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,16 +91,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public static void addBitmapToMemoryCache(String key, Bitmap bitmap) {
-        if (getBitmapFromMemCache(key) == null) {
-            mMemoryCache.put(key, bitmap);
-        }
-    }
-
-    public static Bitmap getBitmapFromMemCache(String key) {
-        return mMemoryCache.get(key);
-    }
-
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.\
         menu.clear();
@@ -134,4 +134,6 @@ public class MainActivity extends AppCompatActivity {
             // Update UI to reflect image being shared
         }
     }
+
+    public enum FragmentToLaunch {VIEW, EDIT, ADD, SHARED}
 }

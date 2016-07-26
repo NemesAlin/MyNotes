@@ -8,9 +8,6 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.example.alinnemes.mynotes.R;
-import com.example.alinnemes.mynotes.model.Note;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -18,11 +15,6 @@ import java.util.ArrayList;
  * Created by alin.nemes on 13-Jul-16.
  */
 public class NoteAdapter extends ArrayAdapter<Note> {
-
-    public static class ViewHolder {
-        TextView noteSubject;
-        TextView noteBody;
-    }
 
     public NoteAdapter(Context context, ArrayList<Note> notes) {
         super(context, 0, notes);
@@ -54,6 +46,11 @@ public class NoteAdapter extends ArrayAdapter<Note> {
         holder.noteBody.setText(note.getBody());
 
         return convertView;
+    }
+
+    public static class ViewHolder {
+        TextView noteSubject;
+        TextView noteBody;
     }
 
 }

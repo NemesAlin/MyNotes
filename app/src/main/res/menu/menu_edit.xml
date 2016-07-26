@@ -9,32 +9,32 @@
         app:showAsAction="never" />
 
     <group
-        android:id= "@+id/group_attach"
-        android:icon = "@drawable/loader"
-        app:showAsAction="ifRoom"
-        android:checkableBehavior="single">
+        android:id="@+id/group_attach"
+        android:checkableBehavior="single"
+        android:icon="@drawable/loader"
+        app:showAsAction="ifRoom">
 
         <item
             android:id="@+id/attach_item"
-            android:title="@string/attachments"
             android:icon="@drawable/attach_icon"
+            android:title="@string/attachments"
             app:showAsAction="always">
             <menu>
                 <item
                     android:id="@+id/action_video"
-                    android:title="@string/take_a_video"
                     android:icon="@drawable/video_icon"
-                    app:showAsAction="collapseActionView"/>
+                    android:title="@string/take_a_video"
+                    app:showAsAction="collapseActionView" />
                 <item
                     android:id="@+id/action_photo"
+                    android:icon="@drawable/camera_icon"
                     android:title="@string/take_a_photo"
-                    app:showAsAction="collapseActionView"
-                    android:icon="@drawable/camera_icon"/>
+                    app:showAsAction="collapseActionView" />
                 <item
                     android:id="@+id/action_gallery"
-                    android:title="Gallery"
-                    app:showAsAction="collapseActionView"
-                    android:icon="@drawable/gallery_icon"/>
+                    android:icon="@drawable/gallery_icon"
+                    android:title="@string/gallery"
+                    app:showAsAction="collapseActionView" />
             </menu>
         </item>
 
@@ -43,11 +43,9 @@
     <item
         android:id="@+id/action_record"
         android:title="@string/delete_record"
-        app:showAsAction="never">
-    </item>
+        app:showAsAction="never"></item>
     <item
         android:id="@+id/action_image"
         android:title="@string/delete_image"
-        app:showAsAction="never">
-    </item>
+        app:showAsAction="never"></item>
 </menu>

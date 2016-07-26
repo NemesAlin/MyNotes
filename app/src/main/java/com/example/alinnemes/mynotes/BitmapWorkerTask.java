@@ -1,10 +1,8 @@
 package com.example.alinnemes.mynotes;
 
 import android.app.ProgressDialog;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.widget.ImageView;
 
@@ -15,8 +13,8 @@ import java.lang.ref.WeakReference;
  */
 public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
     private final WeakReference<ImageView> imageViewReference;
-    private String picturePath;
     ProgressDialog dialog;
+    private String picturePath;
 
     public BitmapWorkerTask(ImageView imageView) {
         // Use a WeakReference to ensure the ImageView can be garbage collected

@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/something"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentRight="true"
+    android:gravity="center_vertical"
     android:orientation="horizontal"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:layout_alignParentRight="true"
-    android:layout_alignParentLeft="true"
-    android:gravity="center_vertical"
-    android:id="@+id/something">
+    android:paddingTop="@dimen/activity_vertical_margin">
 
     <!--<ListView-->
     <!--android:id="@+id/listview_notes"-->
@@ -22,8 +22,8 @@
         android:id="@+id/listItemNoteSubject"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
         android:layout_marginBottom="2dp"
         android:ellipsize="end"
         android:singleLine="true"
@@ -37,9 +37,9 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/listItemNoteSubject"
         android:ellipsize="end"
+        android:gravity="center_vertical"
         android:singleLine="true"
-        android:text="The description of the note, in other words, the body of a particularly note! big text, larger, smaller, etc and etc :)"
-        android:gravity="center_vertical" />
+        android:text="The description of the note, in other words, the body of a particularly note! big text, larger, smaller, etc and etc :)" />
 
 
 </RelativeLayout>
