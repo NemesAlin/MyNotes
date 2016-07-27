@@ -294,7 +294,7 @@ public class EditFragment extends Fragment {
                                     ContextMenu.ContextMenuInfo menuInfo) {
         menu.setHeaderTitle(R.string.image);
         ArrayList<String> menuItems = new ArrayList<String>();
-        menuItems.add(String.valueOf(R.string.delete_image));
+        menuItems.add(getString(R.string.delete_image));
         for (int i = 0; i < menuItems.size(); i++) {
             menu.add(Menu.NONE, i, i, menuItems.get(i));
         }
@@ -529,10 +529,11 @@ public class EditFragment extends Fragment {
                     if (noteSubject.getText().toString().equals("")) {
                         Toast.makeText(getActivity(), R.string.cannot_add_a_note_without_subject, Toast.LENGTH_LONG).show();
                     } else {
+                        String timeStamp = new SimpleDateFormat("dd.MM.yyyy\nHH:mm").format(new Date());
                         Note note =
-                                myNotesDBAdapter.createNote(noteSubject.getText() + "", noteBody.getText() + "", picturePath, audioPath, videoPath);
+                                myNotesDBAdapter.createNote(noteSubject.getText() + "", noteBody.getText() + "", timeStamp, "location", picturePath, audioPath, videoPath);
 
-                        Log.d("DEBUG THE ADD METHOD", "NOTE SUBJECT: " + note.getSubject() + ", NOTE BODY: " + note.getBody() + ", NOTE PHOTOPATH: " + note.getPhotoPath() + ",NOTE AUDIOPATH: " + note.getAudioPath());
+                        Log.d("DEBUG THE ADD METHOD", "NOTE SUBJECT: " + note.getSubject() + ", NOTE BODY: " + note.getBody() + ", NOTE CREATED: " + note.getDateCreated() + ", NOTE LOCATION: " + note.getLocationCreated() + ", NOTE PHOTOPATH: " + note.getPhotoPath() + ", NOTE AUDIOPATH: " + note.getAudioPath());
 
                         startActivity(intent);
                     }

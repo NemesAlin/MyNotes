@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), EditActivity.class);
                 intent.putExtra(MainActivity.NOTE_FRAGMENT_TO_LOAD, MainActivity.FragmentToLaunch.ADD);
                 startActivity(intent);
-                overridePendingTransition(R.anim.enter_from_bottom,R.anim.exit_to_top);
+                overridePendingTransition(R.anim.enter_from_bottom, R.anim.exit_to_top);
             }
         });
 

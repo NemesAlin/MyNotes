@@ -31,6 +31,7 @@ public class NoteAdapter extends ArrayAdapter<Note> {
             //instance the newViewHolder to hold the references
             holder = new ViewHolder();
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_item, parent, false);
+            holder.noteDate = (TextView) convertView.findViewById(R.id.note_date_created);
             holder.noteSubject = (TextView) convertView.findViewById(R.id.listItemNoteSubject);
             holder.noteBody = (TextView) convertView.findViewById(R.id.listItemNoteBody);
 
@@ -44,6 +45,7 @@ public class NoteAdapter extends ArrayAdapter<Note> {
         //fill each new reference view with concrete data
         holder.noteSubject.setText(note.getSubject());
         holder.noteBody.setText(note.getBody());
+        holder.noteDate.setText(note.getDateCreated());
 
         return convertView;
     }
@@ -51,6 +53,7 @@ public class NoteAdapter extends ArrayAdapter<Note> {
     public static class ViewHolder {
         TextView noteSubject;
         TextView noteBody;
+        TextView noteDate;
     }
 
 }

@@ -52,13 +52,13 @@ public class EditActivity extends AppCompatActivity {
 
                         public void onClick(DialogInterface arg0, int arg1) {
                             EditActivity.super.onBackPressed();
-                            overridePendingTransition(R.anim.enter_from_left,R.anim.exit_to_right);
+                            overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
                         }
                     }).create().show();
         } else {
             super.onBackPressed();
         }
-        overridePendingTransition(R.anim.enter_from_left,R.anim.exit_to_right);
+        overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
     }
 
     private void createAndAddFragment() {

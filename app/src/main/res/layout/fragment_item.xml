@@ -12,18 +12,15 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin">
 
-    <!--<ListView-->
-    <!--android:id="@+id/listview_notes"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:layout_gravity="right|center_vertical" />-->
 
     <TextView
         android:id="@+id/listItemNoteSubject"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/listItemNoteBody"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/listItemNoteBody"
         android:layout_marginBottom="2dp"
         android:ellipsize="end"
         android:singleLine="true"
@@ -36,10 +33,23 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/listItemNoteSubject"
+        android:layout_toLeftOf="@+id/note_date_created"
+        android:layout_toStartOf="@+id/note_date_created"
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:singleLine="true"
         android:text="The description of the note, in other words, the body of a particularly note! big text, larger, smaller, etc and etc :)" />
+
+    <TextView
+        android:id="@+id/note_date_created"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:text="date"
+        android:textAlignment="textEnd"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
 
 </RelativeLayout>

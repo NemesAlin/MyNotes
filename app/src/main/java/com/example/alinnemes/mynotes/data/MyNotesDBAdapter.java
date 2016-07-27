@@ -17,13 +17,15 @@ import java.util.ArrayList;
 public class MyNotesDBAdapter {
 
     private static final String DATABASE_NAME = "mynotes.db";
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 9;
 
     private static final String NOTE_TABLE = "note";
 
     private static final String COLUMN_ID = "_id";
     private static final String COLUMN_SUBJECT = "subject";
     private static final String COLUMN_BODY = "body";
+    private static final String COLUMN_DATECREATED = "dateCreated";
+    private static final String COLUMN_LOCATIONCREATED = "locationCreated";
     private static final String COLUMN_PHOTOPATH = "photo";
     private static final String COLUMN_AUDIOPATH = "audio";
     private static final String COLUMN_VIDEOPATH = "video";
@@ -33,9 +35,11 @@ public class MyNotesDBAdapter {
             COLUMN_BODY + " TEXT NOT NULL, " +
             COLUMN_PHOTOPATH + " TEXT, " +
             COLUMN_AUDIOPATH + " TEXT, " +
-            COLUMN_VIDEOPATH + " TEXT " +
+            COLUMN_VIDEOPATH + " TEXT, " +
+            COLUMN_DATECREATED + " TEXT NOT NULL, " +
+            COLUMN_LOCATIONCREATED + " TEXT NOT NULL " +
             ");";
-    private String[] allColumns = {COLUMN_ID, COLUMN_SUBJECT, COLUMN_BODY, COLUMN_PHOTOPATH, COLUMN_AUDIOPATH, COLUMN_VIDEOPATH};
+    private String[] allColumns = {COLUMN_ID, COLUMN_SUBJECT, COLUMN_BODY, COLUMN_PHOTOPATH, COLUMN_AUDIOPATH, COLUMN_VIDEOPATH, COLUMN_DATECREATED, COLUMN_LOCATIONCREATED};
     private SQLiteDatabase sqLiteDatabase;
     private Context context;
     private MyNotesDbHelper myNotesDbHelper;
@@ -54,13 +58,15 @@ public class MyNotesDBAdapter {
         myNotesDbHelper.close();
     }
 
-    public Note createNote(String subject, String body, String photoPath, String audioPath, String videoPath) {
+    public Note createNote(String subject, String body, String dateCreated, String locationCreated, String photoPath, String audioPath, String videoPath) {
         ContentValues values = new ContentValues();
         values.put(COLUMN_SUBJECT, subject);
         values.put(COLUMN_BODY, body);
         values.put(COLUMN_PHOTOPATH, photoPath);
         values.put(COLUMN_AUDIOPATH, audioPath);
         values.put(COLUMN_VIDEOPATH, videoPath);
+        values.put(COLUMN_DATECREATED, dateCreated);
+        values.put(COLUMN_LOCATIONCREATED, locationCreated);
 
         long insertId = sqLiteDatabase.insert(NOTE_TABLE, null, values);
 
@@ -112,7 +118,7 @@ public class MyNotesDBAdapter {
     }
 
     private Note cursorToNote(Cursor cursor) {
-        Note newNote = new Note(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5));
+        Note newNote = new Note(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6), cursor.getString(7));
         return newNote;
     }
 

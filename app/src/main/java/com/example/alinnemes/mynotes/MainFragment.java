@@ -1,7 +1,6 @@
 package com.example.alinnemes.mynotes;
 
 import android.annotation.TargetApi;
-import android.app.ActivityOptions;
 import android.app.ListFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -134,7 +133,7 @@ public class MainFragment extends ListFragment {
         }
 //        startActivity(intent,ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
         startActivity(intent);
-        getActivity().overridePendingTransition(R.anim.enter_from_right,R.anim.exit_to_left);
+        getActivity().overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
     }
 
     public void buildDeleteConfirmDialog() {
