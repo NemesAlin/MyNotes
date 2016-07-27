@@ -173,7 +173,6 @@ public class EditFragment extends Fragment {
         });
         mImageView.setLongClickable(true);
         registerForContextMenu(mImageView);
-
         return view;
     }
 
@@ -544,9 +543,7 @@ public class EditFragment extends Fragment {
 
                     startActivity(intent);
                 }
-                Note note = myNotesDBAdapter.getNote(noteSubject.getText().toString());
-                Log.d("Save Note", "NoteSubject: " + note.getSubject() + " NoteBody: " + note.getBody() + " PhotoPath: " + note.getPhotoPath() + " AudioPath: " + note.getAudioPath());
-
+                getActivity().overridePendingTransition(R.anim.enter_from_bottom, R.anim.exit_to_top);
                 myNotesDBAdapter.close();
 
 

@@ -1,14 +1,21 @@
 package com.example.alinnemes.mynotes;
 
+import android.annotation.TargetApi;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.transition.ChangeBounds;
+import android.transition.Slide;
+import android.view.Gravity;
+import android.view.Window;
 
+@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class EditActivity extends AppCompatActivity {
 
     public static final String NEW_NOTE_EXTRA = "new_NOTE";
@@ -21,6 +28,7 @@ public class EditActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         setContentView(R.layout.activity_edit);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -44,15 +52,18 @@ public class EditActivity extends AppCompatActivity {
 
                         public void onClick(DialogInterface arg0, int arg1) {
                             EditActivity.super.onBackPressed();
+                            overridePendingTransition(R.anim.enter_from_left,R.anim.exit_to_right);
                         }
                     }).create().show();
         } else {
             super.onBackPressed();
         }
+        overridePendingTransition(R.anim.enter_from_left,R.anim.exit_to_right);
     }
 
     private void createAndAddFragment() {
 
+        //.setCustomAnimations(R.anim.card_flip_right_in, R.anim.card_flip_right_out, R.anim.card_flip_left_in, R.anim.card_flip_left_out)
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
@@ -84,7 +95,25 @@ public class EditActivity extends AppCompatActivity {
                 fragmentTransaction.add(R.id.note_container, editFragment, "NOTE_EDIT_FRAGMENT");
                 break;
             case VIEW:
+
+                Slide slideTransition = new Slide(Gravity.RIGHT);
+                slideTransition.setDuration(300);
+
+                ChangeBounds changeBoundsTransition = new ChangeBounds();
+                changeBoundsTransition.setDuration(300);
+
                 ViewFragment viewFragment = new ViewFragment();
+
+//                viewFragment.setEnterTransition(slideTransition);
+//                viewFragment.setReenterTransition(slideTransition);
+//                viewFragment.setExitTransition(slideTransition);
+//                viewFragment.setAllowEnterTransitionOverlap(false);
+//                viewFragment.setAllowReturnTransitionOverlap(false);
+//                viewFragment.setSharedElementEnterTransition(changeBoundsTransition);
+//
+//                getWindow().getEnterTransition().setDuration(500);
+
+
                 setTitle(R.string.title_view_fragment);
                 Bundle newBundle = new Bundle();
                 newBundle.putString(NOTE_SUBJECT_STR, intent.getExtras().getString(MainActivity.NOTE_SUBJECT_EXTRA));

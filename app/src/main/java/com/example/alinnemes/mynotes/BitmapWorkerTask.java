@@ -13,8 +13,6 @@ import java.lang.ref.WeakReference;
  */
 public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
     private final WeakReference<ImageView> imageViewReference;
-    ProgressDialog dialog;
-    private String picturePath;
 
     public BitmapWorkerTask(ImageView imageView) {
         // Use a WeakReference to ensure the ImageView can be garbage collected
@@ -23,10 +21,9 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
 
     @Override
     protected Bitmap doInBackground(String... params) {
-        picturePath = params[0];
-        final Bitmap bitmap = BitmapFactory.decodeFile(picturePath);
+        String picturePath = params[0];
 //        MainActivity.addBitmapToMemoryCache(picturePath,bitmap);
-        return bitmap;
+        return BitmapFactory.decodeFile(picturePath);
 //        return decodeSampledBitmapFromResource(getResources(), picturePath, 100, 100));
     }
 

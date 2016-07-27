@@ -132,7 +132,9 @@ public class MainFragment extends ListFragment {
                 intent.putExtra(MainActivity.NOTE_FRAGMENT_TO_LOAD, MainActivity.FragmentToLaunch.EDIT);
                 break;
         }
-        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
+//        startActivity(intent,ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
+        startActivity(intent);
+        getActivity().overridePendingTransition(R.anim.enter_from_right,R.anim.exit_to_left);
     }
 
     public void buildDeleteConfirmDialog() {
