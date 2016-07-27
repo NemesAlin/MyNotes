@@ -47,7 +47,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:text="date"
+        android:text="Small Text"
         android:textAlignment="textEnd"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 

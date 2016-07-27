@@ -42,6 +42,7 @@ public class ViewFragment extends Fragment {
     private TextView noteSubject;
     private TextView noteBody;
     private TextView notifAudioRecordTV;
+    private TextView dateCreated;
     //imageViews
     private ImageView mImageView;
     //videoViews
@@ -91,6 +92,7 @@ public class ViewFragment extends Fragment {
 
         noteSubject = (TextView) view.findViewById(R.id.viewNoteSubject);
         noteBody = (TextView) view.findViewById(R.id.viewNoteBody);
+        dateCreated = (TextView) view.findViewById(R.id.note_date_created_VIEW);
         notifAudioRecordTV = (TextView) view.findViewById(R.id.audioRecordText);
         notifAudioRecordTV.setVisibility(View.GONE);
         mImageView = (ImageView) view.findViewById(R.id.imageView_ViewFrag);
@@ -108,6 +110,7 @@ public class ViewFragment extends Fragment {
         picturePath = intent.getExtras().getString(MainActivity.NOTE_PHOTOPATH_EXTRA);
         audioPath = intent.getExtras().getString(MainActivity.NOTE_AUDIOPATH_EXTRA);
         videoPath = intent.getExtras().getString(MainActivity.NOTE_VIDEOPATH_EXTRA);
+        dateCreated.setText(intent.getExtras().getString(MainActivity.NOTE_DATECREATED_EXTRA));
         if (picturePath != null) {
             try {
                 loadBitmap(picturePath, mImageView);
@@ -171,6 +174,7 @@ public class ViewFragment extends Fragment {
                 intent.putExtra(MainActivity.NOTE_PHOTOPATH_EXTRA, note.getPhotoPath());
                 intent.putExtra(MainActivity.NOTE_AUDIOPATH_EXTRA, note.getAudioPath());
                 intent.putExtra(MainActivity.NOTE_VIDEOPATH_EXTRA, note.getVideoPath());
+                intent.putExtra(MainActivity.NOTE_DATECREATED_EXTRA, note.getDateCreated());
                 intent.putExtra(MainActivity.NOTE_FRAGMENT_TO_LOAD, MainActivity.FragmentToLaunch.EDIT);
                 startActivity(intent);
                 getActivity().overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);

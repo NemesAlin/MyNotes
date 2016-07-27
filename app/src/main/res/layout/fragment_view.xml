@@ -20,7 +20,10 @@
         <ScrollView
             android:id="@+id/viewNoteScrollView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_toLeftOf="@+id/note_date_created_VIEW">
 
             <TextView
                 android:id="@+id/viewNoteSubject"
@@ -133,6 +136,17 @@
             android:backgroundTint="#ff0000"
             android:text="Start Playing"
             android:textColor="#ffffff" />
+
+        <TextView
+            android:id="@+id/note_date_created_VIEW"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:text="Small Text"
+            android:textAlignment="textEnd"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
 
     </RelativeLayout>
 </ScrollView>

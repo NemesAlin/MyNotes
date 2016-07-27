@@ -122,6 +122,7 @@ public class MainFragment extends ListFragment {
         intent.putExtra(MainActivity.NOTE_PHOTOPATH_EXTRA, note.getPhotoPath());
         intent.putExtra(MainActivity.NOTE_AUDIOPATH_EXTRA, note.getAudioPath());
         intent.putExtra(MainActivity.NOTE_VIDEOPATH_EXTRA, note.getVideoPath());
+        intent.putExtra(MainActivity.NOTE_DATECREATED_EXTRA, note.getDateCreated());
 
         switch (ftl) {
             case VIEW:

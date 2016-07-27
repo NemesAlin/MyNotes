@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String NOTE_PHOTOPATH_EXTRA = "com.example.alinnemes.NOTE_PHOTOPATH";
     public static final String NOTE_AUDIOPATH_EXTRA = "com.example.alinnemes.NOTE_AUDIOPATH";
     public static final String NOTE_VIDEOPATH_EXTRA = "com.example.alinnemes.NOTE_VIDEOPATH";
+    public static final String NOTE_DATECREATED_EXTRA = "com.example.alinnemes.NOTE_DATECREATED";
     public static final String NOTE_FRAGMENT_TO_LOAD = "com.example.alinnemes.FRAGMENT_TO_LOAD";
 
 
