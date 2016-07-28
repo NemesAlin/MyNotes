@@ -9,7 +9,10 @@
     <!-- read and write permissions -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!--get the record permission to acces the hardware mic-->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <!--get the FINE location of the device-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
     <uses-feature
         android:name="android.hardware.camera"

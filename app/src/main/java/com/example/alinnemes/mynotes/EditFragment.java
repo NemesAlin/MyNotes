@@ -1,15 +1,20 @@
 package com.example.alinnemes.mynotes;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
@@ -32,6 +37,9 @@ import android.widget.VideoView;
 
 import com.example.alinnemes.mynotes.data.MyNotesDBAdapter;
 import com.example.alinnemes.mynotes.model.Note;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,9 +50,8 @@ import java.util.Date;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class EditFragment extends Fragment {
+public class EditFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
-    ////methods to intent to the camera hardware
     static final int REQUEST_IMAGE_CAPTURE = 1;
     static final int REQUEST_IMAGE_PICK = 2;
     static final int REQUEST_VIDEO_CAPTURE = 3;
@@ -58,6 +65,7 @@ public class EditFragment extends Fragment {
     public String picturePath;
     public String audioPath;
     public String videoPath;
+    public String locationCoords;
     public File photoFile;
     boolean mStartRecording = true;
     boolean mStartPlaying = true;
@@ -72,6 +80,7 @@ public class EditFragment extends Fragment {
     private TextView notifAudioRecordTV;
     private Button startStopREC;
     private Button startStopPLAY;
+    private GoogleApiClient mGoogleApiClient;
 
     public EditFragment() {
         setHasOptionsMenu(true);
@@ -81,6 +90,22 @@ public class EditFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            newNote = bundle.getBoolean(EditActivity.NEW_NOTE_EXTRA, false);
+        }
+
+        if (newNote) {
+            // Create an instance of GoogleAPIClient.
+            if (mGoogleApiClient == null) {
+                mGoogleApiClient = new GoogleApiClient.Builder(getContext())
+                        .addConnectionCallbacks(this)
+                        .addOnConnectionFailedListener(this)
+                        .addApi(LocationServices.API)
+                        .build();
+            }
+        }
+
     }
 
     @Override
@@ -88,11 +113,6 @@ public class EditFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_edit, container, false);
-
-        Bundle bundle = this.getArguments();
-        if (bundle != null) {
-            newNote = bundle.getBoolean(EditActivity.NEW_NOTE_EXTRA, false);
-        }
 
         noteSubject = (EditText) view.findViewById(R.id.editNoteSubject);
         noteBody = (EditText) view.findViewById(R.id.editNoteBody);
@@ -324,6 +344,22 @@ public class EditFragment extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.connect();
+        }
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.disconnect();
+        }
+        super.onStop();
+    }
+
+    @Override
     public void onPrepareOptionsMenu(Menu menu) {
         MenuItem action_record_item = menu.findItem(R.id.action_record);
         MenuItem action_image_item = menu.findItem(R.id.action_image);
@@ -431,6 +467,7 @@ public class EditFragment extends Fragment {
         }
     }
 
+    ////methods to intent to the camera hardware
     private void pickImageFromGallery() {
         Intent pickImage = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(pickImage, REQUEST_IMAGE_PICK);
@@ -530,10 +567,14 @@ public class EditFragment extends Fragment {
                         Toast.makeText(getActivity(), R.string.cannot_add_a_note_without_subject, Toast.LENGTH_LONG).show();
                     } else {
                         String timeStamp = new SimpleDateFormat("dd.MM.yyyy\nHH:mm").format(new Date());
+                        if (locationCoords == null) {
+                            Toast.makeText(getActivity(), "Location Services UNAVAILABLE! The Note will be saved with no location data.", Toast.LENGTH_LONG).show();
+                            locationCoords = "none";
+                        }
                         Note note =
-                                myNotesDBAdapter.createNote(noteSubject.getText() + "", noteBody.getText() + "", timeStamp, "location", picturePath, audioPath, videoPath);
+                                myNotesDBAdapter.createNote(noteSubject.getText() + "", noteBody.getText() + "", timeStamp, locationCoords, picturePath, audioPath, videoPath);
 
-                        Log.d("DEBUG THE ADD METHOD", "NOTE SUBJECT: " + note.getSubject() + ", NOTE BODY: " + note.getBody() + ", NOTE CREATED: " + note.getDateCreated() + ", NOTE LOCATION: " + note.getLocationCreated() + ", NOTE PHOTOPATH: " + note.getPhotoPath() + ", NOTE AUDIOPATH: " + note.getAudioPath());
+                        Log.e("DEBUG THE ADD METHOD", "NOTE SUBJECT: " + note.getSubject() + ", NOTE BODY: " + note.getBody() + ", NOTE CREATED: " + note.getDateCreated() + ", NOTE LOCATION: " + note.getLocationCreated() + ", NOTE PHOTOPATH: " + note.getPhotoPath() + ", NOTE AUDIOPATH: " + note.getAudioPath() + ", NOTEVIDEOPATH: " + note.getVideoPath());
 
                         startActivity(intent);
                     }
@@ -561,4 +602,33 @@ public class EditFragment extends Fragment {
         saveConfirmDialogObject = confirmBuilder.create();
     }
 
+    @Override
+    public void onConnected(Bundle bundle) {
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                mGoogleApiClient);
+        if (mLastLocation != null) {
+            String latitude = String.valueOf(mLastLocation.getLatitude());
+            String longitude = String.valueOf(mLastLocation.getLongitude());
+            locationCoords = latitude + "," + longitude;
+        } else {
+            Toast.makeText(getActivity(), "Location Services UNAVAILABLE! The Note will be saved with no location data.", Toast.LENGTH_LONG).show();
+            locationCoords = "none";
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        if (connectionResult.getErrorCode() == ConnectionResult.API_UNAVAILABLE) {
+            Toast.makeText(getActivity(), "The location services are unavailable!", Toast.LENGTH_SHORT).show();
+        }
+
+    }
 }
