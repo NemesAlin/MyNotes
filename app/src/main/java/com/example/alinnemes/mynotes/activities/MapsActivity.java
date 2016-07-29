@@ -1,9 +1,10 @@
-package com.example.alinnemes.mynotes;
+package com.example.alinnemes.mynotes.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import com.example.alinnemes.mynotes.data.MyNotesDBAdapter;
+import com.example.alinnemes.mynotes.R;
+import com.example.alinnemes.mynotes.data.MyNotesDB;
 import com.example.alinnemes.mynotes.model.Note;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -13,12 +14,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private HashMap<String, String> notesHashMap;
     private ArrayList<Note> noteArrayList;
 
     @Override
@@ -32,10 +31,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             e.printStackTrace();
         }
 
-        MyNotesDBAdapter myNotesDBAdapter = new MyNotesDBAdapter(getApplicationContext());
-        myNotesDBAdapter.open();
-        noteArrayList = myNotesDBAdapter.getAllNotes();
-        myNotesDBAdapter.close();
+        MyNotesDB myNotesDB = new MyNotesDB(getApplicationContext());
+        myNotesDB.open();
+        noteArrayList = myNotesDB.getAllNotes();
+        myNotesDB.close();
 
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -51,7 +50,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         for (int i = 0; i < noteArrayList.size(); i++) {
             String locationCoords = noteArrayList.get(i).getLocationCreated();
             char c = locationCoords.charAt(0);
-        //DISPLAY ON THE MAP ONLY THE NOTES THAT HAVE COORDS
+            //DISPLAY ON THE MAP ONLY THE NOTES THAT HAVE COORDS
             if (Character.isDigit(c)) {
                 String[] parts = locationCoords.split(",");
                 LatLng latLng = new LatLng(Double.parseDouble(parts[0]), Double.parseDouble(parts[1]));

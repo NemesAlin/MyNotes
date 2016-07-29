@@ -1,4 +1,4 @@
-package com.example.alinnemes.mynotes;
+package com.example.alinnemes.mynotes.Utility;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -21,12 +21,9 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
     @Override
     protected Bitmap doInBackground(String... params) {
         String picturePath = params[0];
-//        MainActivity.addBitmapToMemoryCache(picturePath,bitmap);
         return BitmapFactory.decodeFile(picturePath);
-//        return decodeSampledBitmapFromResource(getResources(), picturePath, 100, 100));
     }
 
-    // Once complete, see if ImageView is still around and set bitmap.
     @Override
     protected void onPostExecute(Bitmap bitmap) {
         if (imageViewReference != null && bitmap != null) {
@@ -36,18 +33,4 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
             }
         }
     }
-//
-//    static class AsyncDrawable extends BitmapDrawable {
-//        private final WeakReference<BitmapWorkerTask> bitmapWorkerTaskWeakReference;
-//
-//        public AsyncDrawable(Resources res, Bitmap bitmap, BitmapWorkerTask bitmapWorkerTask) {
-//            super(res, bitmap);
-//            bitmapWorkerTaskWeakReference = new WeakReference<BitmapWorkerTask>(bitmapWorkerTask);
-//        }
-//
-//        public BitmapWorkerTask getBitmapWorkerTask() {
-//            return bitmapWorkerTaskWeakReference.get();
-//        }
-//    }
-
 }

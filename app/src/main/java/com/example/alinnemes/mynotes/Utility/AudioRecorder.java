@@ -1,4 +1,4 @@
-package com.example.alinnemes.mynotes;
+package com.example.alinnemes.mynotes.Utility;
 
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;

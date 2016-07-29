@@ -1,4 +1,4 @@
-package com.example.alinnemes.mynotes;
+package com.example.alinnemes.mynotes.fragments;
 
 
 import android.annotation.TargetApi;
@@ -25,8 +25,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
-import com.example.alinnemes.mynotes.data.MyNotesDBAdapter;
+import com.example.alinnemes.mynotes.Utility.AudioRecorder;
+import com.example.alinnemes.mynotes.R;
+import com.example.alinnemes.mynotes.Utility.PhotoUtility;
+import com.example.alinnemes.mynotes.Utility.VideoUtility;
+import com.example.alinnemes.mynotes.activities.EditActivity;
+import com.example.alinnemes.mynotes.activities.MainActivity;
+import com.example.alinnemes.mynotes.data.MyNotesDB;
 import com.example.alinnemes.mynotes.model.Note;
+import com.google.android.gms.games.video.Video;
 
 import java.io.File;
 
@@ -106,7 +113,7 @@ public class ViewFragment extends Fragment {
         dateCreated.setText(intent.getExtras().getString(MainActivity.NOTE_DATECREATED_EXTRA));
         if (picturePath != null) {
             try {
-                loadBitmap(picturePath, mImageView);
+                PhotoUtility.loadBitmap(picturePath, mImageView);
             } catch (Exception e) {
                 Toast.makeText(getActivity(), R.string.cannot_find_image, Toast.LENGTH_SHORT).show();
                 picturePath = null;
@@ -134,26 +141,17 @@ public class ViewFragment extends Fragment {
             }
         }
 
-        if (videoPath != null) {
-            mVideoView.setVideoPath(videoPath);
-            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mVideoView.getLayoutParams();
-            lp.height = 1000;
-            mVideoView.setLayoutParams(lp);
-            mVideoView.requestFocus();
-            mVideoView.setMediaController(new MediaController(getContext()));
-            mVideoView.start();
-        }
-
+        VideoUtility.playVideo(videoPath,mVideoView,this);
         buildDeleteConfirmDialog();
 
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ///Try something here!!! if don;t work, delete!!!!:)
-                MyNotesDBAdapter myNotesDBAdapter = new MyNotesDBAdapter(getActivity().getBaseContext());
-                myNotesDBAdapter.open();
-                Note note = myNotesDBAdapter.getNote(noteSubject.getText().toString());
-                myNotesDBAdapter.close();
+                MyNotesDB myNotesDB = new MyNotesDB(getActivity().getBaseContext());
+                myNotesDB.open();
+                Note note = myNotesDB.getNote(noteSubject.getText().toString());
+                myNotesDB.close();
                 Intent intent = new Intent(getActivity(), EditActivity.class);
                 intent.putExtra(MainActivity.NOTE_ID_EXTRA, note.getId());
                 intent.putExtra(MainActivity.NOTE_SUBJECT_EXTRA, note.getSubject());
@@ -175,17 +173,6 @@ public class ViewFragment extends Fragment {
         });
 
         return view;
-    }
-
-    public void loadBitmap(String picturePath, ImageView imageView) {
-//        final String imageKey = picturePath;
-//        final Bitmap bitmap = MainActivity.getBitmapFromMemCache(imageKey);
-//        if (bitmap != null) {
-//            mImageView.setImageBitmap(bitmap);
-//        } else {
-        BitmapWorkerTask task = new BitmapWorkerTask(imageView);
-        task.execute(picturePath);
-//        }
     }
 
     @Override
@@ -235,12 +222,12 @@ public class ViewFragment extends Fragment {
         confirmBuilder.setPositiveButton(R.string.confirm_btn, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                MyNotesDBAdapter myNotesDBAdapter = new MyNotesDBAdapter(getActivity().getBaseContext());
-                myNotesDBAdapter.open();
-                Note note = myNotesDBAdapter.getNote(noteSubject.getText().toString());
-                myNotesDBAdapter.deleteNote(note.getId());
+                MyNotesDB myNotesDB = new MyNotesDB(getActivity().getBaseContext());
+                myNotesDB.open();
+                Note note = myNotesDB.getNote(noteSubject.getText().toString());
+                myNotesDB.deleteNote(note.getId());
                 Toast.makeText(getActivity(), getString(R.string.note_deleted) + " " + note.getSubject(), Toast.LENGTH_LONG).show();
-                myNotesDBAdapter.close();
+                myNotesDB.close();
 
                 Intent intent = new Intent(getActivity(), MainActivity.class);
                 startActivity(intent);

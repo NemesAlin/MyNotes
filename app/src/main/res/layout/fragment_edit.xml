@@ -14,7 +14,7 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="60dp"
-        tools:context=".EditFragment"
+        tools:context=".fragments.EditFragment"
         tools:showIn="@layout/activity_edit">
 
         <ScrollView

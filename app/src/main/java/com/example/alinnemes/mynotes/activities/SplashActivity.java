@@ -1,9 +1,11 @@
-package com.example.alinnemes.mynotes;
+package com.example.alinnemes.mynotes.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
+
+import com.example.alinnemes.mynotes.activities.MainActivity;
 
 import java.util.concurrent.TimeUnit;
 

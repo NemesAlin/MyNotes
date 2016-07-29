@@ -1,21 +1,17 @@
-package com.example.alinnemes.mynotes;
+package com.example.alinnemes.mynotes.fragments;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -28,20 +24,26 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
-import com.example.alinnemes.mynotes.data.MyNotesDBAdapter;
+import com.example.alinnemes.mynotes.R;
+import com.example.alinnemes.mynotes.Utility.AudioRecorder;
+import com.example.alinnemes.mynotes.Utility.AudioUtility;
+import com.example.alinnemes.mynotes.Utility.GeneralUtility;
+import com.example.alinnemes.mynotes.Utility.PhotoUtility;
+import com.example.alinnemes.mynotes.Utility.VideoUtility;
+import com.example.alinnemes.mynotes.activities.EditActivity;
+import com.example.alinnemes.mynotes.activities.MainActivity;
+import com.example.alinnemes.mynotes.data.MyNotesDB;
 import com.example.alinnemes.mynotes.model.Note;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -51,32 +53,39 @@ import java.util.Date;
  */
 public class EditFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
-    static final int REQUEST_IMAGE_CAPTURE = 1;
-    static final int REQUEST_IMAGE_PICK = 2;
-    static final int REQUEST_VIDEO_CAPTURE = 3;
-    static final int REQUEST_LOCATION_PERMISSION = 4;
-    private static final String TAKE_PHOTO_EXTRA = "TAKE_PHOTO_EXTRA";
+    //PUBLIC KEYS
+    public static final int REQUEST_IMAGE_CAPTURE = 1;
+    public static final int REQUEST_IMAGE_PICK = 2;
+    public static final int REQUEST_VIDEO_CAPTURE = 3;
+    public static final int REQUEST_LOCATION_PERMISSION = 4;
+    public static final String TAKE_PHOTO_EXTRA = "TAKE_PHOTO_EXTRA";
+
+    //locals
     public String localNoteSubjectVerif = "";
     public String localNoteBodyVerif = "";
     public String localNotePicturePathVerif = "";
     public String localNoteAudioPathVerif = "";
     public String localNoteVideoPathVerif = "";
-    public boolean newNote = false;
-    public String picturePath;
-    public String audioPath;
-    public String videoPath;
-    public String locationCoords;
-    public File photoFile;
-    boolean mStartRecording = true;
-    boolean mStartPlaying = true;
-    AudioRecorder audioRecorder = new AudioRecorder();
-    String mCurrentPhotoPath;
-    String mCurrentAudioPath;
+
+    //PATH'S
+    private String photoPath;
+    private String audioPath;
+    private String videoPath;
+    private String locationCoords;
+
+    //CONDITIONS
+    private boolean mStartRecording = true;
+    private boolean mStartPlaying = true;
+    private boolean newNote = false;
+
+    private AudioRecorder audioRecorder = new AudioRecorder();
+    private long noteID = 0;
+
+    //VIEWS
     private AlertDialog saveConfirmDialogObject;
     private EditText noteSubject, noteBody;
     private ImageView mImageView;
     private VideoView mVideoView;
-    private long noteID = 0;
     private TextView notifAudioRecordTV;
     private Button startStopREC;
     private Button startStopPLAY;
@@ -105,7 +114,6 @@ public class EditFragment extends Fragment implements GoogleApiClient.Connection
                         .build();
             }
         }
-
     }
 
     @Override
@@ -130,28 +138,33 @@ public class EditFragment extends Fragment implements GoogleApiClient.Connection
         if (noteSubject != null || noteBody != null) {
             noteSubject.setText(intent.getExtras().getString(MainActivity.NOTE_SUBJECT_EXTRA));
             noteBody.setText(intent.getExtras().getString(MainActivity.NOTE_BODY_EXTRA));
-            picturePath = intent.getExtras().getString(MainActivity.NOTE_PHOTOPATH_EXTRA);
+            photoPath = intent.getExtras().getString(MainActivity.NOTE_PHOTOPATH_EXTRA);
             audioPath = intent.getExtras().getString(MainActivity.NOTE_AUDIOPATH_EXTRA);
             videoPath = intent.getExtras().getString(MainActivity.NOTE_VIDEOPATH_EXTRA);
 
+            boolean existingAudio = AudioUtility.checkIfAudioRecordExist(audioPath);
+
             localNoteBodyVerif = noteBody.getText().toString();
             localNoteSubjectVerif = noteSubject.getText().toString();
-            localNotePicturePathVerif = picturePath;
-            localNoteAudioPathVerif = audioPath;
+            localNotePicturePathVerif = photoPath;
+            if (existingAudio) {
+                localNoteAudioPathVerif = audioPath;
+            } else {
+                localNoteAudioPathVerif = null;
+            }
             localNoteVideoPathVerif = videoPath;
 
-            playVideo();
+            VideoUtility.playVideo(videoPath, mVideoView, this);
 
-            if (picturePath != null) {
+            if (photoPath != null) {
                 try {
-                    loadBitmap(picturePath, mImageView);
+                    PhotoUtility.loadBitmap(photoPath, mImageView);
                 } catch (Exception e) {
                     Toast.makeText(getActivity(), R.string.cannot_find_image, Toast.LENGTH_SHORT).show();
-                    picturePath = null;
+                    photoPath = null;
                 }
             }
 
-            checkIfAudioRecordExist();
             createOrRedrawAudioRecordContent();
 
             noteID = intent.getExtras().getInt(MainActivity.NOTE_ID_EXTRA, 0);
@@ -168,27 +181,7 @@ public class EditFragment extends Fragment implements GoogleApiClient.Connection
         discardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    if (picturePath != null || videoPath != null || audioPath != null) {
-                        if (!(localNoteSubjectVerif.equals(noteSubject.getText().toString())) || !(localNoteBodyVerif.equals(noteBody.getText().toString())) || !(localNotePicturePathVerif.equals(picturePath)) || !(localNoteAudioPathVerif.equals(audioPath)) || !(localNoteVideoPathVerif.equals(videoPath))) {
-                            EditActivity.CHANGES = 1;
-                            getActivity().onBackPressed();
-                        } else {
-                            EditActivity.CHANGES = 0;
-                            getActivity().onBackPressed();
-                        }
-                    } else {
-                        if (!(localNoteSubjectVerif.equals(noteSubject.getText().toString())) || !(localNoteBodyVerif.equals(noteBody.getText().toString()))) {
-                            EditActivity.CHANGES = 1;
-                            getActivity().onBackPressed();
-                        } else {
-                            EditActivity.CHANGES = 0;
-                            getActivity().onBackPressed();
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                GeneralUtility.discarding(EditFragment.this, localNoteSubjectVerif, noteSubject, localNoteBodyVerif, noteBody, localNotePicturePathVerif, photoPath, localNoteAudioPathVerif, audioPath, localNoteVideoPathVerif, videoPath);
             }
         });
         mImageView.setLongClickable(true);
@@ -196,41 +189,15 @@ public class EditFragment extends Fragment implements GoogleApiClient.Connection
         return view;
     }
 
-    public void playVideo() {
-        if (videoPath != null) {
-            mVideoView.setVideoPath(videoPath);
-            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mVideoView.getLayoutParams();
-            lp.height = 1000;
-            mVideoView.setLayoutParams(lp);
-            mVideoView.requestFocus();
-            mVideoView.setMediaController(new MediaController(getContext()));
-            mVideoView.start();
-        }
-    }
-
-    public boolean checkIfAudioRecordExist() {
-        File audioFile;
-        try {
-            audioFile = new File(audioPath);
-            if (audioFile.exists()) {
-                return true;
-            }
-        } catch (Exception e) {
-            return false;
-        }
-        audioPath = null;
-        return false;
-    }
-
     public void createOrRedrawAudioRecordContent() {
 
-        boolean existingFile = checkIfAudioRecordExist();
+        boolean existingFile = AudioUtility.checkIfAudioRecordExist(audioPath);
 
         if (audioPath != null && existingFile) {
             notifAudioRecordTV.setText(R.string.audio_record_exist);
             try {
                 startStopREC.setOnClickListener(new View.OnClickListener() {
-                    File audioFile = createAudioFile();
+                    File audioFile = AudioUtility.createAudioFile(getContext());
 
                     @Override
                     public void onClick(View view) {
@@ -270,7 +237,7 @@ public class EditFragment extends Fragment implements GoogleApiClient.Connection
             startStopREC.setLayoutParams(lp);
             try {
                 startStopREC.setOnClickListener(new View.OnClickListener() {
-                    File audioFile = createAudioFile();
+                    File audioFile = AudioUtility.createAudioFile(getContext());
 
                     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
                     @Override
@@ -325,23 +292,13 @@ public class EditFragment extends Fragment implements GoogleApiClient.Connection
         switch (item.getItemId()) {
             case 0:
                 mImageView.setImageResource(0);
-                picturePath = null;
+                photoPath = null;
                 return true;
         }
 
         return super.onContextItemSelected(item);
     }
 
-    public void loadBitmap(String picturePath, ImageView imageView) {
-//        final String imageKey = picturePath;
-//        final Bitmap bitmap = MainActivity.getBitmapFromMemCache(imageKey);
-//        if (bitmap != null) {
-//            mImageView.setImageBitmap(bitmap);
-//        } else {
-        BitmapWorkerTask task = new BitmapWorkerTask(imageView);
-        task.execute(picturePath);
-//        }
-    }
 
     @Override
     public void onStart() {
@@ -361,18 +318,24 @@ public class EditFragment extends Fragment implements GoogleApiClient.Connection
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        MenuItem action_record_item = menu.findItem(R.id.action_record);
-        MenuItem action_image_item = menu.findItem(R.id.action_image);
+        MenuItem action_record_item = menu.findItem(R.id.action_deleteRecord);
+        MenuItem action_image_item = menu.findItem(R.id.action_deletePhoto);
+        MenuItem action_video_item = menu.findItem(R.id.action_deleteVideo);
         super.onPrepareOptionsMenu(menu);
         if (audioPath == null) {
             action_record_item.setVisible(false);
         } else {
             action_record_item.setVisible(true);
         }
-        if (picturePath == null) {
+        if (photoPath == null) {
             action_image_item.setVisible(false);
         } else {
             action_image_item.setVisible(true);
+        }
+        if (videoPath == null) {
+            action_video_item.setVisible(false);
+        } else {
+            action_video_item.setVisible(true);
         }
     }
 
@@ -390,87 +353,50 @@ public class EditFragment extends Fragment implements GoogleApiClient.Connection
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
-            case R.id.action_record:
+            case R.id.action_deleteRecord:
                 File audioFile = new File(audioPath);
                 if (audioFile.exists()) {
                     audioFile.delete();
-                    audioPath = null;
                 } else {
                     Toast.makeText(getActivity(), R.string.audio_file_cannot_be_found, Toast.LENGTH_SHORT).show();
-                    audioPath = null;
                 }
+                audioPath = null;
                 createOrRedrawAudioRecordContent();
                 return true;
-            case R.id.action_image:
-                mImageView.setImageResource(0);
-                picturePath = null;
+            case R.id.action_deletePhoto:
+                File photoFile = new File(photoPath);
+                if (photoFile.exists()) {
+                    photoFile.delete();
+                    mImageView.setImageResource(0);
+                } else {
+                    Toast.makeText(getActivity(), R.string.image_file_cannot_be_found, Toast.LENGTH_SHORT).show();
+                }
+                photoPath = null;
+                return true;
+            case R.id.action_deleteVideo:
+                File videoFile = new File(videoPath);
+                if (videoFile.exists()) {
+                    videoFile.delete();
+                } else {
+                    Toast.makeText(getActivity(), R.string.video_file_cannot_be_found, Toast.LENGTH_SHORT).show();
+                }
+                videoPath = null;
                 return true;
             case R.id.action_photo:
-                dispatchTakePictureIntent();
+                PhotoUtility.dispatchTakePictureIntent(this);
                 return true;
             case R.id.action_video:
-                dispatchTakeVideoIntent();
+                VideoUtility.dispatchTakeVideoIntent(this);
                 return true;
             case R.id.action_gallery:
-                pickImageFromGallery();
+                PhotoUtility.pickImageFromGallery(this);
                 return true;
             case android.R.id.home:
-                if (localNotePicturePathVerif != null || picturePath != null) {
-                    if (!(localNoteSubjectVerif.equals(noteSubject.getText().toString())) || !(localNoteBodyVerif.equals(noteBody.getText().toString())) || !(localNotePicturePathVerif.equals(picturePath))) {
-                        EditActivity.CHANGES = 1;
-                        getActivity().onBackPressed();
-                    } else {
-                        EditActivity.CHANGES = 0;
-                        getActivity().onBackPressed();
-                    }
-                } else {
-                    if (!(localNoteSubjectVerif.equals(noteSubject.getText().toString())) || !(localNoteBodyVerif.equals(noteBody.getText().toString()))) {
-                        EditActivity.CHANGES = 1;
-                        getActivity().onBackPressed();
-                    } else {
-                        EditActivity.CHANGES = 0;
-                        getActivity().onBackPressed();
-                    }
-                }
+                GeneralUtility.discarding(EditFragment.this, localNoteSubjectVerif, noteSubject, localNoteBodyVerif, noteBody, localNotePicturePathVerif, photoPath, localNoteAudioPathVerif, audioPath, localNoteVideoPathVerif, videoPath);
                 return true;
         }
         return super.onOptionsItemSelected(item);
 
-    }
-
-    private void dispatchTakePictureIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-            // Create the File where the photo should go
-            photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-                // Error occurred while creating the File
-            }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(getContext(),
-                        "com.example.android.fileprovider",
-                        photoFile);
-                takePictureIntent.putExtra(TAKE_PHOTO_EXTRA, photoURI);
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-            }
-        }
-    }
-
-    private void dispatchTakeVideoIntent() {
-        Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-        if (takeVideoIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-            startActivityForResult(takeVideoIntent, REQUEST_VIDEO_CAPTURE);
-        }
-    }
-
-    ////methods to intent to the camera hardware
-    private void pickImageFromGallery() {
-        Intent pickImage = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(pickImage, REQUEST_IMAGE_PICK);
     }
 
     @Override
@@ -478,74 +404,21 @@ public class EditFragment extends Fragment implements GoogleApiClient.Connection
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMAGE_PICK && resultCode == Activity.RESULT_OK && null != data) {
             Uri selectedImage = data.getData();
-            picturePath = getPhotoVideoPath(selectedImage);
-            loadBitmap(picturePath, mImageView);
+            photoPath = GeneralUtility.getPhotoVideoPath(selectedImage, this);
+            PhotoUtility.loadBitmap(photoPath, mImageView);
         } else if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
             Uri selectedImage = data.getData();
-            picturePath = getPhotoVideoPath(selectedImage);
-            loadBitmap(picturePath, mImageView);
-            galleryAddPic();///curios!!!!!
+            photoPath = GeneralUtility.getPhotoVideoPath(selectedImage, this);
+            PhotoUtility.loadBitmap(photoPath, mImageView);
+            PhotoUtility.galleryAddPic(photoPath, this);///curios!!!!!
         } else if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == Activity.RESULT_OK) {
             Uri videoUri = data.getData();
-            videoPath = getPhotoVideoPath(videoUri);
-            playVideo();
+            videoPath = GeneralUtility.getPhotoVideoPath(videoUri, this);
+            VideoUtility.playVideo(videoPath, mVideoView, this);
 
         }
 
     }
-
-    public String getPhotoVideoPath(Uri uri) {
-        String[] projection = {MediaStore.Images.Media.DATA};
-        Cursor cursor = getActivity().getContentResolver().query(uri, projection, null, null, null);
-        if (cursor == null) return null;
-        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        String s = cursor.getString(column_index);
-        cursor.close();
-        return s;
-    }
-
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-
-        // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath = "file:" + image.getAbsolutePath();
-        return image;
-    }
-
-    private File createAudioFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String audioFileName = "REC_" + timeStamp + "_";
-        File storageDir = getActivity().getExternalFilesDir("Records");
-        File audio = File.createTempFile(
-                audioFileName,  /* prefix */
-                ".3gp",         /* suffix */
-                storageDir      /* directory */
-        );
-
-        mCurrentAudioPath = "file:" + audio.getAbsolutePath();
-        return audio;
-    }
-
-
-    private void galleryAddPic() {
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File f = new File(mCurrentPhotoPath);
-        Uri contentUri = Uri.fromFile(f);
-        mediaScanIntent.setData(contentUri);
-        getActivity().sendBroadcast(mediaScanIntent);
-    }
-
-    ////^^^^^^^--------methods to intent to the camera hardware
 
     public void buildSaveConfirmDialog() {
         AlertDialog.Builder confirmBuilder = new AlertDialog.Builder(getActivity());
@@ -558,8 +431,8 @@ public class EditFragment extends Fragment implements GoogleApiClient.Connection
 
 
                 Intent intent = new Intent(getActivity(), MainActivity.class);
-                MyNotesDBAdapter myNotesDBAdapter = new MyNotesDBAdapter(getActivity().getBaseContext());
-                myNotesDBAdapter.open();
+                MyNotesDB myNotesDB = new MyNotesDB(getActivity().getBaseContext());
+                myNotesDB.open();
 
                 //if is a new note create it in database
                 if (newNote) {
@@ -572,7 +445,7 @@ public class EditFragment extends Fragment implements GoogleApiClient.Connection
                             locationCoords = "none";
                         }
                         Note note =
-                                myNotesDBAdapter.createNote(noteSubject.getText() + "", noteBody.getText() + "", timeStamp, locationCoords, picturePath, audioPath, videoPath);
+                                myNotesDB.createNote(noteSubject.getText() + "", noteBody.getText() + "", timeStamp, locationCoords, photoPath, audioPath, videoPath);
 
                         Log.e("DEBUG THE ADD METHOD", "NOTE SUBJECT: " + note.getSubject() + ", NOTE BODY: " + note.getBody() + ", NOTE CREATED: " + note.getDateCreated() + ", NOTE LOCATION: " + note.getLocationCreated() + ", NOTE PHOTOPATH: " + note.getPhotoPath() + ", NOTE AUDIOPATH: " + note.getAudioPath() + ", NOTEVIDEOPATH: " + note.getVideoPath());
 
@@ -580,13 +453,13 @@ public class EditFragment extends Fragment implements GoogleApiClient.Connection
                     }
                 } else {
                     //otherwise, is an existing note, update it!
-                    long id = myNotesDBAdapter.updateNote(noteID, noteSubject.getText() + "", noteBody.getText() + "", picturePath, audioPath, videoPath);
+                    long id = myNotesDB.updateNote(noteID, noteSubject.getText() + "", noteBody.getText() + "", photoPath, audioPath, videoPath);
                     Log.d("DEBUG THE UPDATE METHOD", Long.toString(id));
 
                     startActivity(intent);
                 }
                 getActivity().overridePendingTransition(R.anim.enter_from_bottom, R.anim.exit_to_top);
-                myNotesDBAdapter.close();
+                myNotesDB.close();
 
 
             }

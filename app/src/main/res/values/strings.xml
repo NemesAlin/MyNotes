@@ -31,6 +31,7 @@
     <string name="delete_note" translatable="true">Delete Note</string>
     <string name="delete_record" translatable="true">Delete Record</string>
     <string name="delete_image" translatable="true">Delete Image</string>
+    <string name="delete_video" translatable="true">Delete Video</string>
     <string name="attachments" translatable="true">Attachments</string>
     <string name="take_a_video" translatable="true">Take a video</string>
     <string name="take_a_photo" translatable="true">Take a photo</string>
@@ -51,6 +52,8 @@
     <string name="audio_record_dont_exist" translatable="true">No audio record for this note!\nDo you want to record something?</string>
     <string name="image" translatable="true">Image</string>
     <string name="audio_file_cannot_be_found" translatable="true">Audio file cannot be found!</string>
+    <string name="video_file_cannot_be_found" translatable="true">Video file cannot be found!</string>
+    <string name="image_file_cannot_be_found" translatable="true">Image file cannot be found!</string>
     <string name="save" translatable="true">Save</string>
     <string name="save_q" translatable="true">Are you sure you want to save the note?</string>
     <string name="cannot_add_a_note_without_subject" translatable="true">Cannot add a note without subject!</string>

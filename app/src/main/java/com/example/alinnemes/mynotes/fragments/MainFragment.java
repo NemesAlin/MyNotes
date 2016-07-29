@@ -1,4 +1,4 @@
-package com.example.alinnemes.mynotes;
+package com.example.alinnemes.mynotes.fragments;
 
 import android.annotation.TargetApi;
 import android.app.ListFragment;
@@ -16,16 +16,19 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.alinnemes.mynotes.data.MyNotesDBAdapter;
+import com.example.alinnemes.mynotes.R;
+import com.example.alinnemes.mynotes.activities.EditActivity;
+import com.example.alinnemes.mynotes.activities.MainActivity;
+import com.example.alinnemes.mynotes.data.MyNotesDB;
 import com.example.alinnemes.mynotes.model.Note;
-import com.example.alinnemes.mynotes.model.NoteAdapter;
+import com.example.alinnemes.mynotes.Utility.ListNoteAdapter;
 
 import java.util.ArrayList;
 
 public class MainFragment extends ListFragment {
 
     private ArrayList<Note> notes;
-    private NoteAdapter noteAdapter;
+    private ListNoteAdapter listNoteAdapter;
     private AlertDialog deleteConfirmDialogObject;
     private int pos;
 
@@ -37,15 +40,15 @@ public class MainFragment extends ListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        MyNotesDBAdapter myNotesDBAdapter = new MyNotesDBAdapter(getActivity().getBaseContext());
-        myNotesDBAdapter.open();
-        notes = myNotesDBAdapter.getAllNotes();
-        myNotesDBAdapter.close();
+        MyNotesDB myNotesDB = new MyNotesDB(getActivity().getBaseContext());
+        myNotesDB.open();
+        notes = myNotesDB.getAllNotes();
+        myNotesDB.close();
 
-        noteAdapter = new NoteAdapter(getActivity(), notes);
+        listNoteAdapter = new ListNoteAdapter(getActivity(), notes);
 
         //set the adapter to display the list of notes
-        setListAdapter(noteAdapter);
+        setListAdapter(listNoteAdapter);
 
         //build the delete dialog
         buildDeleteConfirmDialog();
@@ -147,14 +150,14 @@ public class MainFragment extends ListFragment {
             public void onClick(DialogInterface dialogInterface, int i) {
                 int rowPosition = getPositionToDeleteNote();
                 Note note = (Note) getListAdapter().getItem(rowPosition);
-                MyNotesDBAdapter myNotesDBAdapter = new MyNotesDBAdapter(getActivity().getBaseContext());
-                myNotesDBAdapter.open();
-                myNotesDBAdapter.deleteNote(note.getId());
+                MyNotesDB myNotesDB = new MyNotesDB(getActivity().getBaseContext());
+                myNotesDB.open();
+                myNotesDB.deleteNote(note.getId());
                 notes.clear();
-                notes.addAll(myNotesDBAdapter.getAllNotes());
-                noteAdapter.notifyDataSetChanged();
+                notes.addAll(myNotesDB.getAllNotes());
+                listNoteAdapter.notifyDataSetChanged();
                 Toast.makeText(getActivity(), getString(R.string.note_deleted) + " " + note.getSubject(), Toast.LENGTH_LONG).show();
-                myNotesDBAdapter.close();
+                myNotesDB.close();
             }
         });
 

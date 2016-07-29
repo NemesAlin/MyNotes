@@ -1,4 +1,4 @@
-package com.example.alinnemes.mynotes.model;
+package com.example.alinnemes.mynotes.Utility;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,15 +8,16 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.example.alinnemes.mynotes.R;
+import com.example.alinnemes.mynotes.model.Note;
 
 import java.util.ArrayList;
 
 /**
  * Created by alin.nemes on 13-Jul-16.
  */
-public class NoteAdapter extends ArrayAdapter<Note> {
+public class ListNoteAdapter extends ArrayAdapter<Note> {
 
-    public NoteAdapter(Context context, ArrayList<Note> notes) {
+    public ListNoteAdapter(Context context, ArrayList<Note> notes) {
         super(context, 0, notes);
     }
 

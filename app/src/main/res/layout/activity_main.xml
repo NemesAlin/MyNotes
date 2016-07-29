@@ -8,7 +8,7 @@
     android:background="#d1b887"
     android:fitsSystemWindows="true"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.alinnemes.mynotes.MainActivity">
+    tools:context=".activities.MainActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"

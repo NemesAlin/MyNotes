@@ -14,7 +14,7 @@ import java.util.ArrayList;
 /**
  * Created by alin.nemes on 14-Jul-16.
  */
-public class MyNotesDBAdapter {
+public class MyNotesDB {
 
     private static final String DATABASE_NAME = "mynotes.db";
     private static final int DATABASE_VERSION = 9;
@@ -44,11 +44,11 @@ public class MyNotesDBAdapter {
     private Context context;
     private MyNotesDbHelper myNotesDbHelper;
 
-    public MyNotesDBAdapter(Context cxt) {
+    public MyNotesDB(Context cxt) {
         this.context = cxt;
     }
 
-    public MyNotesDBAdapter open() throws android.database.SQLException {
+    public MyNotesDB open() throws android.database.SQLException {
         myNotesDbHelper = new MyNotesDbHelper(context);
         sqLiteDatabase = myNotesDbHelper.getWritableDatabase();
         return this;

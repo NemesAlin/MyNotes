@@ -56,4 +56,9 @@
     <string name="start_recording" translatable="true">Starte die Aufnahme</string>
     <string name="stop_playing" translatable="true">Hör auf zu spielen</string>
     <string name="stop_recording" translatable="true">Höre auf aufzunehmen</string>
+    <string name="action_map">Karte Lage</string>
+    <string name="delete_video"> Video löschen</string>
+    <string name="title_activity_maps">Karte</string>
+    <string name="image_file_cannot_be_found">Bilddatei kann nicht gefunden werden!</string>
+    <string name="video_file_cannot_be_found">Video kann nicht gefunden werden!</string>
 </resources>

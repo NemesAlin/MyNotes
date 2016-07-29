@@ -1,4 +1,4 @@
-package com.example.alinnemes.mynotes;
+package com.example.alinnemes.mynotes.activities;
 
 import android.annotation.TargetApi;
 import android.content.DialogInterface;
@@ -10,10 +10,11 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.transition.ChangeBounds;
-import android.transition.Slide;
-import android.view.Gravity;
 import android.view.Window;
+
+import com.example.alinnemes.mynotes.fragments.EditFragment;
+import com.example.alinnemes.mynotes.R;
+import com.example.alinnemes.mynotes.fragments.ViewFragment;
 
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class EditActivity extends AppCompatActivity {
@@ -43,7 +44,7 @@ public class EditActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         String frag = getSupportFragmentManager().findFragmentById(R.id.note_container).getClass().getName();
-        if (frag.equals("com.example.alinnemes.mynotes.EditFragment") && CHANGES == 1) {
+        if (frag.equals("com.example.alinnemes.mynotes.fragments.EditFragment") && CHANGES == 1) {
             new AlertDialog.Builder(this)
                     .setTitle(R.string.discard)
                     .setMessage(R.string.discard_q)
@@ -63,7 +64,6 @@ public class EditActivity extends AppCompatActivity {
 
     private void createAndAddFragment() {
 
-        //.setCustomAnimations(R.anim.card_flip_right_in, R.anim.card_flip_right_out, R.anim.card_flip_left_in, R.anim.card_flip_left_out)
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 

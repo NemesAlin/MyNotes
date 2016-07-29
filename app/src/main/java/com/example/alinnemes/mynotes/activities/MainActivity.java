@@ -1,22 +1,22 @@
-package com.example.alinnemes.mynotes;
+package com.example.alinnemes.mynotes.activities;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.util.LruCache;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.alinnemes.mynotes.R;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 public class MainActivity extends AppCompatActivity {
 
+    //KEYS
     public static final String NOTE_SUBJECT_EXTRA = "com.example.alinnemes.NOTE TITLE";
     public static final String NOTE_BODY_EXTRA = "com.example.alinnemes.NOTE BODY";
     public static final String NOTE_ID_EXTRA = "com.example.alinnemes.NOTE ID";
@@ -25,30 +25,19 @@ public class MainActivity extends AppCompatActivity {
     public static final String NOTE_VIDEOPATH_EXTRA = "com.example.alinnemes.NOTE_VIDEOPATH";
     public static final String NOTE_DATECREATED_EXTRA = "com.example.alinnemes.NOTE_DATECREATED";
     public static final String NOTE_FRAGMENT_TO_LOAD = "com.example.alinnemes.FRAGMENT_TO_LOAD";
+    public enum FragmentToLaunch {VIEW, EDIT, ADD, SHARED}
 
-
-    private static LruCache<String, Bitmap> mMemoryCache;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
     private GoogleApiClient client;
 
-    public static void addBitmapToMemoryCache(String key, Bitmap bitmap) {
-        if (getBitmapFromMemCache(key) == null) {
-            mMemoryCache.put(key, bitmap);
-        }
-    }
-
     /* TODO: Modify the My Notes app to:
             Detect the user’s Location when he makes a Note and add the Date and Location info to the saved Note.
            Show a Google Map with all the Locations (similar to the Places Map in FB)
             Add a notification with the possibility to play, pause, stop
     */
-
-    public static Bitmap getBitmapFromMemCache(String key) {
-        return mMemoryCache.get(key);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,24 +72,6 @@ public class MainActivity extends AppCompatActivity {
                 overridePendingTransition(R.anim.enter_from_bottom, R.anim.exit_to_top);
             }
         });
-
-      /*  // Get max available VM memory, exceeding this amount will throw an
-        // OutOfMemory exception. Stored in kilobytes as LruCache takes an
-        // int in its constructor.
-        final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
-
-        // Use 1/8th of the available memory for this memory cache.
-        final int cacheSize = maxMemory / 8;
-
-        mMemoryCache = new LruCache<String, Bitmap>(cacheSize) {
-            @Override
-            protected int sizeOf(String key, Bitmap bitmap) {
-                // The cache size will be measured in kilobytes rather than
-                // number of items.
-                return bitmap.getByteCount() / 1024;
-            }
-        };*/
-
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
@@ -117,9 +88,8 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_map:
-                openPreferredLocationInMap();
+                openMap();
                 return true;
-
             case R.id.action_settings:
 
                 return true;
@@ -127,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void openPreferredLocationInMap() {
+    private void openMap() {
         Intent mapIntent = new Intent(this, MapsActivity.class);
         startActivity(mapIntent);
     }
@@ -203,6 +173,4 @@ public class MainActivity extends AppCompatActivity {
         AppIndex.AppIndexApi.end(client, viewAction);
         client.disconnect();
     }
-
-    public enum FragmentToLaunch {VIEW, EDIT, ADD, SHARED}
 }

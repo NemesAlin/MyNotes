@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.alinnemes.mynotes.EditActivity">
+    tools:context=".activities.EditActivity">
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
@@ -41,11 +41,16 @@
     </group>
 
     <item
-        android:id="@+id/action_record"
+        android:id="@+id/action_deleteRecord"
         android:title="@string/delete_record"
         app:showAsAction="never"/>
     <item
-        android:id="@+id/action_image"
+        android:id="@+id/action_deletePhoto"
         android:title="@string/delete_image"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_deleteVideo"
+        android:title="@string/delete_video"
+        app:showAsAction="never"/>
+
 </menu>
