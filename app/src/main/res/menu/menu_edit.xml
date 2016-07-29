@@ -43,9 +43,9 @@
     <item
         android:id="@+id/action_record"
         android:title="@string/delete_record"
-        app:showAsAction="never"></item>
+        app:showAsAction="never"/>
     <item
         android:id="@+id/action_image"
         android:title="@string/delete_image"
-        app:showAsAction="never"></item>
+        app:showAsAction="never"/>
 </menu>

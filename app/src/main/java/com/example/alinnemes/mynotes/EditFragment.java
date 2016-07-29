@@ -1,6 +1,5 @@
 package com.example.alinnemes.mynotes;
 
-import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -55,6 +54,7 @@ public class EditFragment extends Fragment implements GoogleApiClient.Connection
     static final int REQUEST_IMAGE_CAPTURE = 1;
     static final int REQUEST_IMAGE_PICK = 2;
     static final int REQUEST_VIDEO_CAPTURE = 3;
+    static final int REQUEST_LOCATION_PERMISSION = 4;
     private static final String TAKE_PHOTO_EXTRA = "TAKE_PHOTO_EXTRA";
     public String localNoteSubjectVerif = "";
     public String localNoteBodyVerif = "";
@@ -604,18 +604,51 @@ public class EditFragment extends Fragment implements GoogleApiClient.Connection
 
     @Override
     public void onConnected(Bundle bundle) {
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                mGoogleApiClient);
-        if (mLastLocation != null) {
-            String latitude = String.valueOf(mLastLocation.getLatitude());
-            String longitude = String.valueOf(mLastLocation.getLongitude());
-            locationCoords = latitude + "," + longitude;
+        if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            this.requestPermissions(
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_LOCATION_PERMISSION);
         } else {
-            Toast.makeText(getActivity(), "Location Services UNAVAILABLE! The Note will be saved with no location data.", Toast.LENGTH_LONG).show();
-            locationCoords = "none";
+            Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                    mGoogleApiClient);
+            if (mLastLocation != null) {
+                String latitude = String.valueOf(mLastLocation.getLatitude());
+                String longitude = String.valueOf(mLastLocation.getLongitude());
+                locationCoords = latitude + "," + longitude;
+            } else {
+                Toast.makeText(getActivity(), "Location Services UNAVAILABLE! The Note will be saved with no location data.", Toast.LENGTH_LONG).show();
+                locationCoords = "none";
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String permissions[], @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_LOCATION_PERMISSION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(getActivity(), " LOCATION PERMISSION GRANTED!", Toast.LENGTH_SHORT).show();
+                    if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+                        Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                                mGoogleApiClient);
+                        if (mLastLocation != null) {
+                            String latitude = String.valueOf(mLastLocation.getLatitude());
+                            String longitude = String.valueOf(mLastLocation.getLongitude());
+                            locationCoords = latitude + "," + longitude;
+                        } else {
+                            Toast.makeText(getActivity(), "Location Services UNAVAILABLE! The Note will be saved with no location data.", Toast.LENGTH_LONG).show();
+                            locationCoords = "none";
+                        }
+                    }
+                } else {
+                    Toast.makeText(getActivity(), "Location Services UNAVAILABLE! The Note will be saved with no location data.", Toast.LENGTH_LONG).show();
+                    locationCoords = "none";
+                }
+            }
         }
     }
 

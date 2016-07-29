@@ -55,4 +55,6 @@
     <string name="save_q" translatable="true">Are you sure you want to save the note?</string>
     <string name="cannot_add_a_note_without_subject" translatable="true">Cannot add a note without subject!</string>
     <string name="note_deleted" translatable="true">Note deleted:</string>
+    <string name="action_map" translatable="true">Map Location</string>
+    <string name="title_activity_maps" translatable="true">Map</string>
 </resources>

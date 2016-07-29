@@ -11,6 +11,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
+
 public class MainActivity extends AppCompatActivity {
 
     public static final String NOTE_SUBJECT_EXTRA = "com.example.alinnemes.NOTE TITLE";
@@ -24,6 +28,11 @@ public class MainActivity extends AppCompatActivity {
 
 
     private static LruCache<String, Bitmap> mMemoryCache;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     public static void addBitmapToMemoryCache(String key, Bitmap bitmap) {
         if (getBitmapFromMemCache(key) == null) {
@@ -32,8 +41,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /* TODO: Modify the My Notes app to:
-            * Support adding an image to the note by
-            * Taking an image with the device’s Camera Create your own Custom Camera Canvas Select an existing image from the storage
+            Detect the user’s Location when he makes a Note and add the Date and Location info to the saved Note.
+           Show a Google Map with all the Locations (similar to the Places Map in FB)
+            Add a notification with the possibility to play, pause, stop
     */
 
     public static Bitmap getBitmapFromMemCache(String key) {
@@ -68,13 +78,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), EditActivity.class);
-                intent.putExtra(MainActivity.NOTE_FRAGMENT_TO_LOAD, MainActivity.FragmentToLaunch.ADD);
+                intent.putExtra(MainActivity.NOTE_FRAGMENT_TO_LOAD, FragmentToLaunch.ADD);
                 startActivity(intent);
                 overridePendingTransition(R.anim.enter_from_bottom, R.anim.exit_to_top);
             }
         });
 
-        // Get max available VM memory, exceeding this amount will throw an
+      /*  // Get max available VM memory, exceeding this amount will throw an
         // OutOfMemory exception. Stored in kilobytes as LruCache takes an
         // int in its constructor.
         final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
@@ -89,8 +99,11 @@ public class MainActivity extends AppCompatActivity {
                 // number of items.
                 return bitmap.getByteCount() / 1024;
             }
-        };
+        };*/
 
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -102,7 +115,49 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_map:
+                openPreferredLocationInMap();
+                return true;
+
+            case R.id.action_settings:
+
+                return true;
+        }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void openPreferredLocationInMap() {
+//        HashMap<String, String> hashMap = new HashMap<String, String>();
+//        MyNotesDBAdapter myNotesDBAdapter = new MyNotesDBAdapter(getApplicationContext());
+//        myNotesDBAdapter.open();
+//        ArrayList<Note> noteArrayList = myNotesDBAdapter.getAllNotes();
+//        myNotesDBAdapter.close();
+//        for (int i = 0; i < noteArrayList.size(); i++) {
+//            hashMap.put(noteArrayList.get(i).getSubject(), noteArrayList.get(i).getLocationCreated());
+//        }
+        Intent mapIntent = new Intent(this, MapsActivity.class);
+//        mapIntent.putExtra("map", hashMap);
+        startActivity(mapIntent);
+
+
+//        String location = "46.7581225, 23.5936413";
+//
+//        // Using the URI scheme for showing a location found on a map.  This super-handy
+//        // intent can is detailed in the "Common Intents" page of Android's developer site:
+//        // http://developer.android.com/guide/components/intents-common.html#Maps
+//        Uri geoLocation = Uri.parse("geo:0,0?" + Uri.encode("My notes")).buildUpon()
+//                .appendQueryParameter("q", location)
+//                .build();
+//
+//        Intent intent = new Intent(Intent.ACTION_VIEW);
+//        intent.setData(geoLocation);
+//
+//        if (intent.resolveActivity(getPackageManager()) != null) {
+//            startActivity(intent);
+//        } else {
+//            Log.d("MapLocation DEBUG!!!", "Couldn't call " + location + ", no receiving apps installed!");
+//        }
     }
 
     void handleSendText(Intent intent) {
@@ -135,6 +190,46 @@ public class MainActivity extends AppCompatActivity {
         if (imageUri != null) {
             // Update UI to reflect image being shared
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Main Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app URL is correct.
+                Uri.parse("android-app://com.example.alinnemes.mynotes/http/host/path")
+        );
+        AppIndex.AppIndexApi.start(client, viewAction);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Main Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app URL is correct.
+                Uri.parse("android-app://com.example.alinnemes.mynotes/http/host/path")
+        );
+        AppIndex.AppIndexApi.end(client, viewAction);
+        client.disconnect();
     }
 
     public enum FragmentToLaunch {VIEW, EDIT, ADD, SHARED}
