@@ -77,13 +77,6 @@ public class ViewFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_view, container, false);
 
-
-//        Animation a = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_from_left);
-//        a.reset();
-//        RelativeLayout ll = (RelativeLayout) view.findViewById(R.id.View_fragment);
-//        ll.clearAnimation();
-//        ll.startAnimation(a);
-
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             noteSubjectSTR = bundle.getString(EditActivity.NOTE_SUBJECT_STR, "");
@@ -161,12 +154,6 @@ public class ViewFragment extends Fragment {
                 myNotesDBAdapter.open();
                 Note note = myNotesDBAdapter.getNote(noteSubject.getText().toString());
                 myNotesDBAdapter.close();
-//                getActivity().getSupportFragmentManager()
-//                        .beginTransaction()
-//                        .addSharedElement(noteSubject, MainActivity.NOTE_SUBJECT_EXTRA)
-//                        .replace(R.id.container, new EditFragment())
-//                        .addToBackStack(null)
-//                        .commit();
                 Intent intent = new Intent(getActivity(), EditActivity.class);
                 intent.putExtra(MainActivity.NOTE_ID_EXTRA, note.getId());
                 intent.putExtra(MainActivity.NOTE_SUBJECT_EXTRA, note.getSubject());

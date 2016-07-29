@@ -26,12 +26,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-        //get from intent the hashmap containing notes;
-//        Intent intent = getIntent();
-//        notesHashMap = (HashMap<String, String>)intent.getSerializableExtra("map");
-//        Log.v("HashMapTest", notesHashMap.get("Location note"));
+        try {
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         MyNotesDBAdapter myNotesDBAdapter = new MyNotesDBAdapter(getApplicationContext());
         myNotesDBAdapter.open();
@@ -52,10 +51,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         for (int i = 0; i < noteArrayList.size(); i++) {
             String locationCoords = noteArrayList.get(i).getLocationCreated();
             char c = locationCoords.charAt(0);
-
+        //DISPLAY ON THE MAP ONLY THE NOTES THAT HAVE COORDS
             if (Character.isDigit(c)) {
                 String[] parts = locationCoords.split(",");
-                LatLng latLng = new LatLng(Double.parseDouble(parts[0]), Double.parseDouble(parts[1]))
+                LatLng latLng = new LatLng(Double.parseDouble(parts[0]), Double.parseDouble(parts[1]));
                 mMap.addMarker(new MarkerOptions()
                         .position(latLng)
                         .visible(true)

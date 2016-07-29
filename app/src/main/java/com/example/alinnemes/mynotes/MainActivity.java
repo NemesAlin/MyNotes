@@ -128,36 +128,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void openPreferredLocationInMap() {
-//        HashMap<String, String> hashMap = new HashMap<String, String>();
-//        MyNotesDBAdapter myNotesDBAdapter = new MyNotesDBAdapter(getApplicationContext());
-//        myNotesDBAdapter.open();
-//        ArrayList<Note> noteArrayList = myNotesDBAdapter.getAllNotes();
-//        myNotesDBAdapter.close();
-//        for (int i = 0; i < noteArrayList.size(); i++) {
-//            hashMap.put(noteArrayList.get(i).getSubject(), noteArrayList.get(i).getLocationCreated());
-//        }
         Intent mapIntent = new Intent(this, MapsActivity.class);
-//        mapIntent.putExtra("map", hashMap);
         startActivity(mapIntent);
-
-
-//        String location = "46.7581225, 23.5936413";
-//
-//        // Using the URI scheme for showing a location found on a map.  This super-handy
-//        // intent can is detailed in the "Common Intents" page of Android's developer site:
-//        // http://developer.android.com/guide/components/intents-common.html#Maps
-//        Uri geoLocation = Uri.parse("geo:0,0?" + Uri.encode("My notes")).buildUpon()
-//                .appendQueryParameter("q", location)
-//                .build();
-//
-//        Intent intent = new Intent(Intent.ACTION_VIEW);
-//        intent.setData(geoLocation);
-//
-//        if (intent.resolveActivity(getPackageManager()) != null) {
-//            startActivity(intent);
-//        } else {
-//            Log.d("MapLocation DEBUG!!!", "Couldn't call " + location + ", no receiving apps installed!");
-//        }
     }
 
     void handleSendText(Intent intent) {

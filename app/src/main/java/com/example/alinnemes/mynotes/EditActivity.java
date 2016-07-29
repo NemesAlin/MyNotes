@@ -95,25 +95,7 @@ public class EditActivity extends AppCompatActivity {
                 fragmentTransaction.add(R.id.note_container, editFragment, "NOTE_EDIT_FRAGMENT");
                 break;
             case VIEW:
-
-                Slide slideTransition = new Slide(Gravity.RIGHT);
-                slideTransition.setDuration(300);
-
-                ChangeBounds changeBoundsTransition = new ChangeBounds();
-                changeBoundsTransition.setDuration(300);
-
                 ViewFragment viewFragment = new ViewFragment();
-
-//                viewFragment.setEnterTransition(slideTransition);
-//                viewFragment.setReenterTransition(slideTransition);
-//                viewFragment.setExitTransition(slideTransition);
-//                viewFragment.setAllowEnterTransitionOverlap(false);
-//                viewFragment.setAllowReturnTransitionOverlap(false);
-//                viewFragment.setSharedElementEnterTransition(changeBoundsTransition);
-//
-//                getWindow().getEnterTransition().setDuration(500);
-
-
                 setTitle(R.string.title_view_fragment);
                 Bundle newBundle = new Bundle();
                 newBundle.putString(NOTE_SUBJECT_STR, intent.getExtras().getString(MainActivity.NOTE_SUBJECT_EXTRA));
