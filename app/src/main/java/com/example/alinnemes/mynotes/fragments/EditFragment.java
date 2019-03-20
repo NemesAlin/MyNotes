@@ -189,6 +189,8 @@ public class EditFragment extends Fragment implements GoogleApiClient.Connection
         return view;
     }
 
+    
+
     public void createOrRedrawAudioRecordContent() {
 
         boolean existingFile = AudioUtility.checkIfAudioRecordExist(audioPath);
